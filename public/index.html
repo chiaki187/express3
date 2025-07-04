@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="main.js"></script>
     <title>Chat App</title>
     <style>
       .chat {
@@ -106,6 +107,8 @@
         ws.onerror = function (error) {
           console.error('WebSocket Error: ', error)
         }
+
+       
       }
 
       main()
