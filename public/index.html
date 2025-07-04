@@ -34,6 +34,7 @@
     </style>
   </head>
   <body>
+    <button>start</button>
     
     <div class="chat">
       <ul class="messages"></ul>
@@ -85,27 +86,38 @@
         }
 
         ws.onmessage = function (msg) {
-          const response = msg.data
-          const { id,name, text } = JSON.parse(msg.data)
-          const messageList = document.querySelector('.messages')
-          const inputName= document.getElementById('nameInput') // ← HTMLから取得
+          const data = JSON.parse(msg.data);
 
-          
-
-          const li = document.createElement('li')
-          if (id === myId) {
-            li.textContent = `(${id})自分:` + text
-          } else {
-            li.textContent = `${id} (${name}):`+text
-
-
+          // typeが'ready'なら「接続完了」と表示
+          if (data.type === 'ready') {
+            alert(data.text); // または画面に表示する処理
+            return;
           }
+
+          const { id, name, text } = data;
+          const messageList = document.querySelector('.messages');
+          const li = document.createElement('li');
+          if (id === myId) {
+            li.textContent = `(${id})自分:` + text;
+          } else {
+            li.textContent = `${id} (${name}):` + text;
+          }
+          messageList.appendChild(li);
+        }
+
+        ws.onopen = function () {
+          ws.send(JSON.stringify({ type: 'ready', text: '接続完了' }))
+        }
+
+        ws.onclose = function () {
+          const messageList = document.querySelector('.messages')
+          const li = document.createElement('li')
+          li.textContent = 'WebSocketが切断されました'
           messageList.appendChild(li)
         }
 
-        ws.onerror = function (error) {
-          console.error('WebSocket Error: ', error)
-        }
+        // GUIのテスト
+        drawCircle()
       }
 
       main()

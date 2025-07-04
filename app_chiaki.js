@@ -12,6 +12,14 @@ app.use(express.static('public'))
 app.ws('/ws', (ws, req) => {
   connects.push(ws)
 
+  if (connects.length === 2) {
+    connects.forEach((socket) => {
+      if (socket.readyState === 1) {
+        socket.send(JSON.stringify({ type: 'ready', text: '接続完了' }))
+      }
+    })
+  }
+
   ws.on('message', (message) => {
     console.log('Received:', message)
 
