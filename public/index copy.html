@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat App</title>
+    <style>
+      .chat {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+      }
+      .messages {
+        flex: 1;
+        overflow-y: auto;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .form {
+        display: flex;
+      }
+      .input {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #ccc;
+      }
+      .submit {
+        padding: 10px;
+        border: 1px solid #ccc;
+        background: #eee;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    
+    <div class="chat">
+      <ul class="messages"></ul>
+      <input id="nameInput" placeholder="名前を入力" />
+      
+      <form class="form">
+        <input class="input" autocomplete="off" />
+        <button class="submit">Send</button>
+      </form>
+    </div>
+
+    <!-- これはGUIのテストの丸です -->
+    <canvas id="canvas" width="400" height="150" style="border:1px solid #ccc;"></canvas>
+
+    <!-- これはGUIのテストの丸です -->
+    <script>
+      const canvas = document.getElementById("canvas");
+  const ctx = canvas.getContext("2d");
+  let x = 0;
+
+  function drawCircle() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.beginPath();
+    ctx.arc(x, 75, 20, 0, Math.PI * 2);
+    ctx.fillStyle = "skyblue";
+    ctx.fill();
+    ctx.closePath();
+    x = (x + 2) % canvas.width; // 右に移動して、端で折り返す
+    requestAnimationFrame(drawCircle);
+  }
+      
+
+      function main() {
+        const host = location.origin.replace(/^http/, 'ws')
+        const ws = new WebSocket(host + '/ws')
+        const myId = self.crypto.randomUUID().substr(0, 8)
+
+        const form = document.querySelector('.form')
+    
+
+        form.onsubmit = function (e) {
+          e.preventDefault()
+          const input = document.querySelector('.input')
+          const text = input.value
+          const name = nameInput.value || '匿名'
+          ws.send(JSON.stringify({ id: myId,name, text }))
+          input.value = ''
+          input.focus()
+        }
+
+        ws.onmessage = function (msg) {
+          const response = msg.data
+          const { id,name, text } = JSON.parse(msg.data)
+          const messageList = document.querySelector('.messages')
+          const inputName= document.getElementById('nameInput') // ← HTMLから取得
+
+          
+
+          const li = document.createElement('li')
+          if (id === myId) {
+            li.textContent = `(${id})自分:` + text
+          } else {
+            li.textContent = `${id} (${name}):`+text
+
+
+          }
+          messageList.appendChild(li)
+        }
+
+        ws.onerror = function (error) {
+          console.error('WebSocket Error: ', error)
+        }
+      }
+
+      main()
+    </script>
+  </body>
+</html>
