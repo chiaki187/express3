@@ -77,33 +77,36 @@
     
 
         form.onsubmit = function (e) {
-          e.preventDefault()
-          const input = document.querySelector('.input')
-          const text = input.value
-          const name = nameInput.value || '匿名'
-          ws.send(JSON.stringify({ id: myId,name, text }))
-          input.value = ''
-          input.focus()
+          e.preventDefault();
+          const input = document.querySelector('.input');
+          const text = input.value;
+          const name = nameInput.value || '匿名';
+          ws.send(JSON.stringify({ type: 'start', id: myId, name, text }));
+          input.value = '';
+          input.focus();
         }
 
         ws.onmessage = function (msg) {
           const data = JSON.parse(msg.data);
+          const messageList = document.querySelector('.messages');
+          const li = document.createElement('li');
 
-          // typeが'ready'なら「接続完了」と表示
           if (data.type === 'ready') {
-            alert(data.text); // または画面に表示する処理
+            li.textContent = `[システム] ${data.text}`;
+            li.style.color = 'green'; // システムメッセージは色を変える例
+            messageList.appendChild(li);
             return;
           }
 
-          const { id, name, text } = data;
-          const messageList = document.querySelector('.messages');
-          const li = document.createElement('li');
-          if (id === myId) {
-            li.textContent = `(${id})自分:` + text;
-          } else {
-            li.textContent = `${id} (${name}):` + text;
+          if (data.type === 'satrt') {
+            const { id, name, text } = data;
+            if (id === myId) {
+              li.textContent = `(${id})自分: ${text}`;
+            } else {
+              li.textContent = `${id} (${name}): ${text}`;
+            }
+            messageList.appendChild(li);
           }
-          messageList.appendChild(li);
         }
 
         ws.onopen = function () {
