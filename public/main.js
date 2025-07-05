@@ -9,6 +9,6 @@ ws.onmessage = function(event) {
 };
 
 // 通信がcloseした場合にも画面遷移したい場合はこちらを有効化
-// ws.onclose = function() {
-//   window.location.href = "index.html";
-// };
+  ws.onclose = function() {
+  window.location.href = "connect.html";
+  };
