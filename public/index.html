@@ -8,7 +8,7 @@
     <style>
 
       .center{
-        text-align: center;
+        text-align: center;       
       }
 
       .title{
@@ -79,10 +79,14 @@
           const messageList = document.querySelector('.messages');
           const li = document.createElement('li');
 
+          /*画面のid取得*/
+          const waitingScreen = document.getElementById('waitingScreen');
+          const SucccessConectScreen = document.getElementById('SucccessConectScreen');
+
+
           if (data.type === 'ready') {
-            li.textContent = `[システム] ${data.text}`;
-            li.style.color = 'green'; // システムメッセージは色を変える例
-            messageList.appendChild(li);
+            waitingScreen.style.disyplay="none";
+            SucccessConectScreen.syle.display="block";
             return;
           }
 
