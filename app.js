@@ -9,7 +9,7 @@ let connects = []
 
 app.use(express.static('public'))
 
-app.ws('/ws', (ws, req) => {　// WebSocket endpoint
+app.ws('/ws', (ws, req) => {// WebSocket endpoint
  
   connects.push(ws)
 
