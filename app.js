@@ -29,9 +29,9 @@ app.ws('/ws', (ws, req) => {// WebSocket endpoint
   })
 })
 
-// ルートアクセス時はconnect.htmlを返す
+// ルートアクセス時はconnect.htmlへリダイレクト
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/public/connect.html');
+  res.redirect('/connect.html');
 });
 
 app.listen(port, () => {
