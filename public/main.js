@@ -1,41 +1,49 @@
-const express = require('express')
-const expressWs = require('express-ws')
+// WebSocketサーバーに接続
+const ws = new WebSocket('ws://' + window.location.host + '/ws');
 
-const app = express()
-expressWs(app)
-
-const port = process.env.PORT || 3001
-let connects = []
-
-app.use(express.static('public'))
-
-app.ws('/ws', (ws, req) => {
-  connects.push(ws)
-
-  if (connects.length === 2) {
-    connects.forEach((socket) => {
-      if (socket.readyState === 1) {
-        socket.send(JSON.stringify({ type: 'ready', text: '接続完了' }))
-      }
-    })
+ws.onmessage = function(event) {
+  // サーバーから"done"メッセージを受信したら画面遷移
+  if (event.data === "done") {
+    window.location.href = "index.html";
   }
+};
 
-  ws.on('message', (message) => {
-    console.log('Received:', message)
+// 通信がcloseした場合にも画面遷移したい場合はこちらを有効化
+  ws.onclose = function() {
+  window.location.href = "connect.html";
+  };
 
-    connects.forEach((socket) => {
-      if (socket.readyState === 1) {
-        // Check if the connection is open
-        socket.send(message)
-      }
+  const express = require('express')
+  const expressWs = require('express-ws')
+  
+  const app = express()
+  expressWs(app)
+  
+  const port = process.env.PORT || 3001
+  let connects = []
+  
+  app.use(express.static('public'))
+  
+  app.ws('/ws', (ws, req) => {　// WebSocket endpoint
+   
+    connects.push(ws)
+  
+    ws.on('message', (message) => {
+      console.log('Received:', message)
+  
+      connects.forEach((socket) => {
+        if (socket.readyState === 1) {
+          // Check if the connection is open
+          socket.send(message)
+        }
+      })
+    })
+  
+    ws.on('close', () => {
+      connects = connects.filter((conn) => conn !== ws)
     })
   })
-
-  ws.on('close', () => {
-    connects = connects.filter((conn) => conn !== ws)
-  })
-})
-
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`)
-})
+  
+  app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`)
+  }) 
