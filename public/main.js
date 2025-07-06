@@ -1,3 +1,7 @@
+
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/public/connect.html');
+});
 // ページを開いたときにconnect.htmlでなければ自動でconnect.htmlに遷移
 if (window.location.pathname !== '/connect.html') {
   window.location.href = 'connect.html';
