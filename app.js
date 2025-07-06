@@ -29,6 +29,11 @@ app.ws('/ws', (ws, req) => {// WebSocket endpoint
   })
 })
 
+// ルートアクセス時はconnect.htmlを返す
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/public/connect.html');
+});
+
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`)
-}) 
+})
