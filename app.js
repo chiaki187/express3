@@ -7,8 +7,6 @@ expressWs(app)
 const port = process.env.PORT || 3001
 let connects = []
 
-app.use(express.static('public'))
-
 app.ws('/ws', (ws, req) => {// WebSocket endpoint
  
   connects.push(ws)
@@ -28,6 +26,9 @@ app.ws('/ws', (ws, req) => {// WebSocket endpoint
     connects = connects.filter((conn) => conn !== ws)
   })
 })
+
+// 静的ファイル配信
+app.use(express.static('public'));
 
 // ルートアクセス時はconnect.htmlへリダイレクト
 app.get('/', (req, res) => {
