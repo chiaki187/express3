@@ -1,7 +1,7 @@
 // ページを開いたときにconnect.htmlでなければ自動でconnect.htmlに遷移
 if (window.location.pathname !== '/connect.html') {
   window.location.href = 'connect.html';
-} else {
+}
   // WebSocketサーバーに接続
   const ws = new WebSocket('ws://' + window.location.host + '/ws');
 
@@ -16,4 +16,3 @@ if (window.location.pathname !== '/connect.html') {
     // 接続が解除されたらconnect.htmlへ遷移
     window.location.href = 'connect.html';
   };
-}
