@@ -11,6 +11,8 @@ app.ws('/ws', (ws, req) => {// WebSocket endpoint
  
   connects.push(ws)
 
+   ws.send('handshake done')
+   console.log('New connection established')
   ws.on('message', (message) => {
     console.log('Received:', message)
 
