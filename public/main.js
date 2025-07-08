@@ -1,5 +1,5 @@
 // ページを開いたとき（最初の読み込み時）だけconnect.htmlへ遷移
-if (document.referrer === "" && window.location.pathname !== '/connect.html') {
+if (event.data !== "ready" && window.location.href !== 'connect.html') {
   window.location.href = 'connect.html';
 }
   // WebSocketサーバーに接続
