@@ -3,7 +3,7 @@ if (window.location.pathname !== '/connect.html') {
   window.location.href = 'connect.html';
 }
   // WebSocketサーバーに接続
-  const ws = new WebSocket('ws://' + window.location.host + '/ws');
+  const ws = new WebSocket('wss://' + window.location.host + '/wss');
 
   ws.onmessage = function(event) {
     // サーバーから"done"メッセージを受信したら画面遷移

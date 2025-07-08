@@ -7,7 +7,7 @@ expressWs(app)
 const port = process.env.PORT || 3001
 let connects = []
 
-app.ws('/ws', (ws, req) => {// WebSocket endpoint
+app.ws('/wss', (ws, req) => {// WebSocket endpoint
  
   connects.push(ws)
 
@@ -38,5 +38,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`)
+  console.log(`Server is running on https://localhost:${port}`)
 })
