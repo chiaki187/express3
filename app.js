@@ -11,8 +11,16 @@ app.ws('/wss', (ws, req) => {// WebSocket endpoint
  
   connects.push(ws)
 
-   ws.send('handshake done')
-   console.log('New connection established')
+   if (connects.length === 2) {
+    connects.forEach(socket => {
+      if (socket.readyState === 1) {
+        socket.send('ready');
+      }
+    });
+  }
+
+   ws.send('ready')
+  
   ws.on('message', (message) => {
     console.log('Received:', message)
 
@@ -26,8 +34,14 @@ app.ws('/wss', (ws, req) => {// WebSocket endpoint
 
   ws.on('close', () => {
     connects = connects.filter((conn) => conn !== ws)
-  })
-})
+   // 相手に「切断された」ことを通知
+    connects.forEach(socket => {
+      if (socket.readyState === 1) {
+        socket.send('disconnected');
+      }
+    });
+  });
+});
 
 // 静的ファイル配信
 app.use(express.static('public'));
