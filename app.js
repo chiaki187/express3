@@ -54,3 +54,7 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on https://localhost:${port}`)
 })
+
+setInterval(() => {
+  console.log(`[WebSocket] 現在の接続数: ${connects.length}`);
+}, 10000); // 10秒ごと
