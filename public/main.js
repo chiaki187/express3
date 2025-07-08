@@ -7,7 +7,7 @@ if (window.location.pathname !== '/connect.html') {
 
   ws.onmessage = function(event) {
     // サーバーから"done"メッセージを受信したら画面遷移
-    if (event.data === "done") {
+    if (event.data === "handshake done") {
       window.location.href = "index.html";
     }
   };
