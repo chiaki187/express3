@@ -28,13 +28,6 @@ app.ws('/wss', (ws, req) => {// WebSocket endpoint
   if (connects.length === 2) {
         socket.send('connectionOK');
   }
-   connects.forEach((socket) => {
-      if (socket.readyState === 1) {
-        // Check if the connection is open
-        socket.send(message)
-      }
-    })
-  })
 
    ws.on('message', (data) => {
     console.log(`Received: ${data}`);
@@ -64,7 +57,7 @@ app.ws('/wss', (ws, req) => {// WebSocket endpoint
       }
     });
   });
-  // 接続が解除されたらconnect.htmlへ遷移;
+});
 
 // 静的ファイル配信
 app.use(express.static('public'));
@@ -80,7 +73,7 @@ app.listen(port, () => {
 
  setInterval(() => {
   console.log(`[WebSocket] 現在の接続数: ${connects.length}`);
-}, 5000); // 10秒ごと
+}, 10000); // 10秒ごと
 
 
   
