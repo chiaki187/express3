@@ -1,5 +1,8 @@
 
-  // WebSocketサーバーに接続
+ if(window.location.href !== "connect.html"){
+    window.location.href !== "connect.html";
+ }
+ // WebSocketサーバーに接続
   const ws = new WebSocket('wss://' + window.location.host + '/wss');
 
   ws.onmessage = function(event) {
