@@ -18,6 +18,10 @@ app.ws('/wss', (ws, req) => {// WebSocket endpoint
       }
     });
   }
+   ws.on('message', (data) => {
+    console.log(`Received: ${data}`);
+    // ここでメッセージの処理ロジックを追加
+  });
 
    ws.send('ready')
   

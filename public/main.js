@@ -7,6 +7,10 @@ if (window.location.href !== 'connect.html') {
 
   ws.onmessage = function(event) {
     // サーバーから"ready"メッセージを受信したら画面遷移
+   ws.onopen = () => {
+  console.log('Connected to server');
+  // ここでメッセージ送信のロジックを追加
+  };
     if (event.data === "ready") {
       window.location.href = "index.html";
     }else if (event.data === "disconnected") {
