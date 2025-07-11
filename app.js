@@ -12,11 +12,11 @@ app.ws('/wss', (ws, req) => {// WebSocket endpoint
   connects.push(ws)
 
    if (connects.length === 2) {
-    connects.forEach(socket => {
+    connects.forEach((socket) => {
       if (socket.readyState === 1) {
-        socket.send('ready');
+        socket.send(JSON.stringify({ type: 'ready', text: '接続完了' }))
       }
-    });
+    })
   }
   if (connects.length === 2) {
         socket.send('connectionOK');
