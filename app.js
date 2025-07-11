@@ -24,7 +24,7 @@ app.ws('/ws', (ws, req) => {
     // 全ての接続済みクライアントにメッセージをブロードキャスト
     // ただし、接続がまだ開いている (readyState === 1) ソケットのみに送信
     connects.forEach((socket) => {
-      if (socket.readyState === wsInstance.get ){ // WebSocket.OPEN) { // ws.OPEN はブラウザ側の定数なので、Node.jsでは数値の1
+      if (socket.readyState === wsInstance.get ){} // WebSocket.OPEN) { // ws.OPEN はブラウザ側の定数なので、Node.jsでは数値の1
         socket.send(message);
       }
     });
