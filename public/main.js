@@ -1,7 +1,7 @@
 // ページを開いたとき（最初の読み込み時）だけconnect.htmlへ遷移
-if (window.location.href !== 'connect.html') {
+/*if (window.location.href !== 'connect.html') {
   window.location.href = 'connect.html';
-}
+}*/
   // WebSocketサーバーに接続
   const ws = new WebSocket('wss://' + window.location.host + '/wss');
 
