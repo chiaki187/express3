@@ -11,7 +11,7 @@
   console.log('Connected to server');
   // ここでメッセージ送信のロジックを追加
   };
-    if (event.data === "ready") {
+    if (event.data === "received") {
       window.location.href = "index.html";
     }else if (event.data === "disconnected") {
     alert("相手が切断しました");
