@@ -59,7 +59,7 @@ app.listen(port, () => {
   console.log(`[WebSocket] 現在の接続数: ${connects.length}`);
 }, 10000); // 10秒ごと*/
 
-  server.getConnections((error, count) => {
+  app.getConnections((error, count) => {
     if (error) {
       console.error('Error getting connections:', error);
     } else {
