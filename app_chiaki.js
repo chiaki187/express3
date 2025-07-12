@@ -11,21 +11,20 @@ app.use(express.static('public'))
 
 app.ws('/ws', (ws, req) => {
   connects.push(ws)
-
+ // 2人接続したら、ゲーム開始準備の信号を送る
   if (connects.length === 2) {
     connects.forEach((socket) => {
       if (socket.readyState === 1) {
-        socket.send(JSON.stringify({ type: 'start_game', text: '接続完了' }))
+        socket.send(JSON.stringify({ type: 'ready', text: '接続完了' }))
       }
     })
-  }
+}
 
+  // クライアントからメッセージを受信
   ws.on('message', (message) => {
-    console.log('Received:', message)
-
+    // メッセージを送信者以外に転送
     connects.forEach((socket) => {
-      if (socket.readyState === 1) {
-        // Check if the connection is open
+      if (socket !== ws && socket.readyState === 1) {
         socket.send(message)
       }
     })
