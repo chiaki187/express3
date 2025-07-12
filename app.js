@@ -11,22 +11,19 @@ app.ws('/wss', (ws, req) => {// WebSocket endpoint
  
   connects.push(ws)
 
-   if (connects.length === 2) {
+   /*if (connects.length === 2) {
     connects.forEach(socket => {
       if (socket.readyState === 1) {
         socket.send('ready');
-      }
-    });
-  }
-  if (connects.length === 2) {
-    connects.forEach((socket) => {
-      if (socket.readyState === 1) {
         socket.send('connectionOK');
       }
-    })
-  }
-  
+    });
+  }*/
 
+  if (connects.length === 2) {
+    socket.send('connectionOK');
+  }
+ 
    ws.on('message', (data) => {
     console.log(`Received: ${data}`);
     socket.send('received')
@@ -71,7 +68,7 @@ app.listen(port, () => {
 
  setInterval(() => {
   console.log(`[WebSocket] 現在の接続数: ${connects.length}`);
-}, 3000); // 3秒ごと
+}, 5000); // 5秒ごと
 
 
   
