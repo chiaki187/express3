@@ -25,9 +25,7 @@ app.ws('/wss', (ws, req) => {// WebSocket endpoint
       }
     })
   }
-  if (connects.length === 2) {
-        socket.send('connectionOK');
-  }
+  
 
    ws.on('message', (data) => {
     console.log(`Received: ${data}`);
