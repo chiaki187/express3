@@ -13,8 +13,10 @@ app.ws('/ws', (ws, req) => {
   connects.push(ws)
  // 2人接続したら、ゲーム開始準備の信号を送る
   if (connects.length === 2) {
+    console.log('サーバー: 2人接続しました。ready信号を送ります。');
     connects.forEach((socket) => {
       if (socket.readyState === 1) {
+        console.log('サーバー：ready信号を送ったよ。');
         socket.send(JSON.stringify({ type: 'ready', text: '接続完了' }))
       }
     })

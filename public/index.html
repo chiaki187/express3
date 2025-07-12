@@ -236,7 +236,7 @@
 
             ws.onmessage = function (msg) {
                 const data = JSON.parse(msg.data);
-
+                console.log('クライアント: サーバーからメッセージを受信しました:', data);
             
                 if (data.type === 'ready') {
                     waitingScreen.style.display = "none";
