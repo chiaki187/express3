@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat App</title>
+    <link rel="stylesheet" href="index.css">
+     <script src="main.js"></script>
+     
+    <style>
+
+        .center{
+            text-align: center;
+        }
+
+        .title{
+            font-size: 2em;
+        }
+        .title-Space{
+            margin-top: 100px;
+        }
+        .msg-Fromgame{
+            font-size: 1.5em;
+            color: #5f5f5f;
+        }
+        .setColorHightLight{
+            color:rgb(229, 100, 45)
+        }
+        .setColorGreen{
+            color:rgb(113, 229, 45)
+        }
+        .startBtm{
+            display: block;
+            margin: 0 auto;
+        }
+
+        .retireBtm{
+            display: block;
+            margin-left: 100px;
+            margin-right: auto
+
+        }
+        .finishBtm{
+            display: flex;
+            background-color: #f44336;
+            color: white;
+
+            margin-left: auto;
+        }
+
+        /*retire,finishボタンの入れるコンテナ*/
+        .button-container {
+            display: flex;
+            width:90%;
+        }
+
+
+        .gameFrame{
+            width: 60%;
+            height: 400px;
+            border: 5px solid #000000;
+            align-content: center;
+            /*background-color: #ececf0;*/
+            margin: 0 auto;
+            margin-bottom:50px;
+            display: flex; /* Flexboxを有効にする */
+            justify-content: center; /* 水平方向の中央揃え */
+            align-items: center; /* 垂直方向の中央揃え */
+            position: relative; /* ★これがあるか確認！★ */
+            overflow: hidden;   /* ★これがあるか確認！枠からはみ出さないようにする★ */
+
+        }
+        .gameFrameBalck{
+            width: 80%;
+            height: 400px;
+            /* margin-right:50px; このプロパティはFlexboxでは不要な場合が多い */
+            border: 5px solid #000000;
+            align-content: center; /* Flexbox/Grid用なので削除 */
+            background-color: #8484ff;
+        }
+        /*メインの動かすキャラ*/
+        .mainChara{
+            width: 50px; /* 適宜調整してください */
+            height: 50px; /* 適宜調整してください */
+            background-color: #ffffff;
+            border: 5px solid #b6e4f5;
+            border-radius: 50%; /* これで要素が丸くなります */
+
+
+            /* ★重要: JavaScriptで位置を制御するため追加★ */
+            position: absolute;
+            /* ★重要: 初期位置を設定★ */
+            top: 50px; /* ★ここを修正！ 'x' を 'px' に ★ */
+            left: 50px;
+            /* ★スムーズに動かすための遷移効果 (任意) ★ */
+            transition: top 0.05s linear, left 0.05s linear;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div id="waitingScreen">
+
+        <h1 class="title title-Space center">ナビして！真っ暗</h1>
+        <h1 class="title center">刑務所脱出ゲーム</h1>
+        <h2 class="msg-Fromgame title-Space center">相手の接続を待っているよ</h2>
+    </div>
+
+
+    <div id="SucccessConectScreen">
+        <h1 class="title title-Space center">ナビして！真っ暗</h1>
+        <h1 class="title center">刑務所脱出ゲーム</h1>
+        <h2 class="msg-Fromgame title-Space setColorHightLight center" id="BeforePush-startBtm" style="display:block;">接続が完了したよ！ゲーム開始ボタンを押そう↓</h2>
+        <h2 class="msg-Fromgame title-Space setColorGreen center" id="AfterPush-startBtm" style="display:none;">相手がスタートボタンを押すのを待っているよ</h2>
+        <button id="startButton" class="title startBtm center">ゲーム開始</button>
+    </div>
+
+
+
+    <div id="gameScreen" style="display:none;">
+        <h1 class="title center">ナビして！真っ暗 刑務所脱出ゲーム</h1>
+        <h2 class="msg-Fromgame title-Space setColorHightLight center">ゲームが開始されたよ！</h2>
+        <div id="gameFrame" class="gameFrame">
+            <div id="mainChara" class="mainChara"></div>
+            </div>
+        <div class="button-container">
+            <button id="retireButton" class="title retireBtm">ゲームリタイア</button>
+            <button id="finishButton" class="title finishBtm">ゲーム終了</button>
+        </div>
+
+    </div>
+
+
+    <script>
+        // DOMContentLoadedイベントリスナーは、main関数を呼び出すためだけにシンプルにします。
+        // これにより、HTML要素がすべてDOMに読み込まれてからJavaScriptが実行されます。
+        window.addEventListener('DOMContentLoaded', main);
+
+        function main() {
+            // WebSocket接続のセットアップ
+            const host = location.origin.replace(/^http/, 'ws');
+            const ws = new WebSocket(host + '/ws');
+            const myId = self.crypto.randomUUID().substr(0, 8); // 各クライアントにユニークなID
+
+            /* 画面のid取得 */
+            const waitingScreen = document.getElementById('waitingScreen');
+            const SucccessConectScreen = document.getElementById('SucccessConectScreen');
+            const gameScreen = document.getElementById('gameScreen');
+
+            // 動かす丸の要素を取得 (IDで取得)
+            const mainChar = document.getElementById('mainChara');
+            // gameFrame要素も取得
+            const gameFrame = document.getElementById('gameFrame');
+
+            // mainChar と gameFrame が存在することを確認
+            if (mainChar && gameFrame) {
+                // 丸の初期位置をCSSから取得
+                let charX = parseInt(window.getComputedStyle(mainChar).left);
+                let charY = parseInt(window.getComputedStyle(mainChar).top);
+
+                const moveSpeed = 10; // 移動速度 (1回のキー入力で動くピクセル数)
+
+                // ゲーム枠の境界とキャラクターのサイズを取得
+                // これらの値はリサイズ時に更新されるよう、イベントリスナー内でも取得する
+                let gameFrameWidth = gameFrame.offsetWidth;
+                let gameFrameHeight = gameFrame.offsetHeight;
+                let charWidth = mainChar.offsetWidth;
+                let charHeight = mainChar.offsetHeight;
+
+                // ★★★ここから追加/修正 (キーボードイベントと送信) ★★★
+                // キーボードイベントリスナーを設定 (ローカルの丸の動き)
+                document.addEventListener('keydown', (e) => {
+                    let newX = charX;
+                    let newY = charY;
+                    let moved = false; // 丸が実際に動いたかどうかを追跡
+
+                    switch (e.key) {
+                        case 'k': // 'k' キーで上へ
+                            newY -= moveSpeed;
+                            moved = true;
+                            break;
+                        case 'ArrowDown': // 矢印下キーで下へ
+                            newY += moveSpeed;
+                            moved = true;
+                            break;
+                        case 'ArrowLeft': // 矢印左キーで左へ
+                            newX -= moveSpeed;
+                            moved = true;
+                            break;
+                        case 'ArrowRight': // 矢印右キーで右へ
+                            newX += moveSpeed;
+                            moved = true;
+                            break;
+                        default:
+                            return; // 上記以外のキーは処理しない
+                    }
+                    // ★重要: 矢印キーや 'k' キーでスクロールするブラウザのデフォルト動作を防ぐ★
+                    e.preventDefault();
+
+                    // ★境界線チェック: gameFrameの範囲内に留まるようにする★
+                    // X軸のチェック
+                    if (newX < 0) {
+                        newX = 0;
+                    } else if (newX > gameFrameWidth - charWidth) {
+                        newX = gameFrameWidth - charWidth;
+                    }
+
+                    // Y軸のチェック
+                    if (newY < 0) {
+                        newY = 0;
+                    } else if (newY > gameFrameHeight - charHeight) {
+                        newY = gameFrameHeight - charHeight;
+                    }
+
+                    // 位置が実際に変わった場合のみ更新と送信
+                    if (moved && (charX !== newX || charY !== newY)) {
+                        charX = newX;
+                        charY = newY;
+                        mainChar.style.left = `${charX}px`;
+                        mainChar.style.top = `${charY}px`;
+
+                        // ★重要: サーバーに現在の丸の位置を送信★
+                        ws.send(JSON.stringify({
+                            type: 'move_char', // メッセージのタイプを定義
+                            x: charX,           // 新しいX座標
+                            y: charY,           // 新しいY座標
+                            senderId: myId      // 誰が動かしたかを示すユニークID
+                        }));
+                    }
+                });
+
+                // ウィンドウのリサイズ時にゲーム枠のサイズを更新
+                window.addEventListener('resize', () => {
+                    gameFrameWidth = gameFrame.offsetWidth;
+                    gameFrameHeight = gameFrame.offsetHeight;
+                    // ウィンドウサイズ変更時にキャラクターが画面外に出ないよう、位置を調整
+                    charX = Math.max(0, Math.min(charX, gameFrameWidth - charWidth));
+                    charY = Math.max(0, Math.min(charY, gameFrameHeight - charHeight));
+                    mainChar.style.left = `${charX}px`;
+                    mainChar.style.top = `${charY}px`;
+                });
+                // ★★★ここまで追加/修正 (キーボードイベントと送信) ★★★
+
+            } else {
+                console.error("エラー: 'mainChara' または 'gameFrame' 要素が見つかりませんでした。HTMLを確認してください。");
+            }
+
+            // ★★★ここから追加/修正 (WebSocketメッセージ受信と反映) ★★★
+            // WebSocketメッセージ受信時の処理 (他のクライアントからの動きを受信する)
+            ws.onmessage = function (msg) {
+                const data = JSON.parse(msg.data);
+
+                // 画面切り替えのメッセージ処理
+                if (data.type === 'ready') {
+                    waitingScreen.style.display = "none";
+                    SucccessConectScreen.style.display = "block";
+                    return;
+                }
+
+                if (data.type === 'start_game') {
+                    SucccessConectScreen.style.display = "none";
+                    gameScreen.style.display = "block";
+                    const beforePushStartBtm = document.getElementById('BeforePush-startBtm');
+                    if (beforePushStartBtm) beforePushStartBtm.style.display = "none";
+                    const afterPushStartBtm = document.getElementById('AfterPush-startBtm');
+                    if (afterPushStartBtm) afterPushStartBtm.style.display = "none";
+                }
+
+                // ★他のクライアントからの丸の移動メッセージを処理★
+                // 受信したメッセージのsenderIdが自分のものでない場合のみ処理
+                if (data.type === 'move_char' && data.senderId !== myId) {
+                    if (mainChar) { // mainChar要素が存在することを確認
+                        // 受信した座標にローカルの丸を移動させる
+                        mainChar.style.left = `${data.x}px`;
+                        mainChar.style.top = `${data.y}px`;
+                        // ローカルの座標変数を更新 (次のキー入力が同期された位置から始まるように)
+                        charX = data.x;
+                        charY = data.y;
+                    }
+                }
+            };
+            // ★★★ここまで追加/修正 (WebSocketメッセージ受信と反映) ★★★
+
+            ws.onopen = function () {
+                ws.send(JSON.stringify({ type: 'ready', text: '接続完了' }));
+            };
+
+            ws.onclose = function () {
+                console.log("WebSocketが切断されました");
+                // 必要に応じて切断メッセージをUIに表示
+            };
+
+            // スタートボタンのクリックイベント
+            const startButton = document.getElementById('startButton');
+            if (startButton) {
+                startButton.onclick = function() {
+                    ws.send(JSON.stringify({ type: 'start_game', id: myId }));
+                    const beforePushStartBtm = document.getElementById('BeforePush-startBtm');
+                    if (beforePushStartBtm) beforePushStartBtm.style.display = "none";
+                    const afterPushStartBtm = document.getElementById('AfterPush-startBtm');
+                    if (afterPushStartBtm) afterPushStartBtm.style.display = "block";
+                    startButton.style.display = "none";
+                };
+            }
+        }
+    </script>
+</body>
+</html>
