@@ -15,7 +15,7 @@ app.ws('/ws', (ws, req) => {
   if (connects.length === 2) {
     connects.forEach((socket) => {
       if (socket.readyState === 1) {
-        socket.send(JSON.stringify({ type: 'ready', text: '接続完了' }))
+        socket.send(JSON.stringify({ type: 'start_game', text: '接続完了' }))
       }
     })
   }
