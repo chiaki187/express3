@@ -27,7 +27,7 @@ app.ws('/ws', (ws, req) => {
       if (socket.readyState === wsInstance.get ){} // WebSocket.OPEN) { // ws.OPEN はブラウザ側の定数なので、Node.jsでは数値の1
         socket.send(message);
       }
-    });
+    );
   });
 
   // 接続が閉じられた時のイベントハンドラ
