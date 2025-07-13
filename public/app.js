@@ -1,6 +1,5 @@
 // ゲームの状態を管理するフラグ
 let isGameOver = false;
-let isGameClear = false;
 
 // DOM要素の取得
 const gameContainer = document.getElementById('gameFrame');
@@ -79,7 +78,6 @@ function initializeCharacterPositions() {
 
     // ゲームオーバー状態をリセット
     isGameOver = false;
-    isGameClear = false;
     // 背景色もリセット
     gameFrameBlack.style.backgroundColor = '#8484ff'; 
     // 速度もリセット
@@ -121,15 +119,6 @@ function animate() {
         gameOverScreen.style.display = 'block';
         return; 
     }
-}
-
-function animate() {
-    if (isGameClear) {
-        gameScreen.style.display = 'none';
-        gameClearScreen.style.display = 'block';
-        return; 
-    }
-}
 
     // 敵キャラ1の移動
     enemy1X += enemySpeed1 * enemy1DirectionX;
@@ -197,7 +186,7 @@ function animate() {
     // ゲームクリア判定 (myCharaが基準)
     const clearThresholdX = gameContainer.offsetWidth - myCircle.offsetWidth; 
     if (myX >= clearThresholdX) {
-        isGameClear = true;
+        isGameOver = true;
         gameFrameBlack.style.backgroundColor = '#00ffff';
         gameScreen.style.display = 'none';
         gameClearScreen.style.display = 'block';
@@ -269,7 +258,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     window.addEventListener('resize', () => {
-        if ((!isGameOver && !isGameClear) && gameScreen.style.display === 'block') {
+        if (!isGameOver && gameScreen.style.display === 'block') {
             initializeCharacterPositions();
         }
     });
@@ -311,7 +300,7 @@ document.addEventListener('DOMContentLoaded', () => {
             gameFrameBlack.style.backgroundColor = '#000000';
         } else if (data.type === 'GameClear') {
             console.log('クライアント: サーバーからゲームクリアメッセージを受信！');
-            isGameClear = true;
+            isGameOver = true;
             gameScreen.style.display = 'none';
             gameClearScreen.style.display = 'block';
             gameFrameBlack.style.backgroundColor = '#00ffff';
@@ -324,6 +313,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 otherY = data.y;
                 otherCircle.style.left = `${otherX}px`;
                 otherCircle.style.top = `${otherY}px`;
+<<<<<<< HEAD
+=======
                 otherX = data.myX;
                 otherY = data.myY;
                 otherCircle.style.left = `${otherX}px`;
@@ -339,6 +330,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 enemy2Y = data.enemy2Y;
                 otherenemyChara2.style.left = `${enemy2X}px`;
                 otherenemyChara2.style.top = `${enemy2Y}px`;
+>>>>>>> 7d176f5d56f3d455a2ab3c8ba8b4b3b2dfa01317
             }
         }
     };
@@ -349,7 +341,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     ws.onclose = function () {
         console.log('クライアント: WebSocket接続が閉じました。');
-        if (!isGameOver && !isGameClear) {
+        if (!isGameOver) {
             alert('サーバーとの接続が切れました。');
         }
     };
