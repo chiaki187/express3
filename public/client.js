@@ -28,3 +28,16 @@ document.getElementById('startButton').onclick = () => {
   console.log('クライアント: スタートボタンを押しました');
   document.getElementById('startButton').style.display = 'none';
 };
+
+ if (data.type === 'game_start') {
+      if (connects.length >= 2) {
+        connects.forEach((socket) => {
+          if (socket.readyState === 1) {
+            socket.send(JSON.stringify({ type: 'start_game', message: 'ゲームが開始されました！' }));
+          }
+        });
+      } else {
+        ws.send(JSON.stringify({ type: 'error', message: 'プレイヤーが足りません' }));
+      }
+    }
+  ;
