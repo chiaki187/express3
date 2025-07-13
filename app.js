@@ -91,7 +91,7 @@ app.ws('/ws', (ws, req) => {
       });
     }
     // プレイヤーの移動情報を受信したときの処理
-    else if (data.type === 'player_move') {
+    else if (data.type === 'game_state_sync') {
         // ナビゲーターからの移動情報のみを処理
         if (ws.role === 'navigator') {
             // ビューアーにのみ移動情報を転送
