@@ -23,16 +23,16 @@ app.ws('/ws', (ws, req) => {
     })
 }
 
-ws.forEach((socket) => {
-    // 接続が開いている場合のみ、接続情報を送信
-    if (data.type === 'user_ready') {
-      start.push(ws)
-    }
-    if(start.length === 2) {
-      socket.send(JSON.stringify({ type: 'game_start', text: 'ゲームを開始します' }))
-    }
-  })
-  
+if (data.type === 'user_ready') {
+  start.push(socket); // socket を追加
+  if (start.length === 2) {
+    ws.forEach((s) => {
+      s.send(JSON.stringify({ type: 'game_start', text: 'ゲームを開始します' }));
+    });
+  }
+}
+
+
   // クライアントからメッセージを受信
   ws.on('message', (message) => {
     // メッセージを送信者以外に転送
