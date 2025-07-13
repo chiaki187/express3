@@ -17,6 +17,7 @@
     alert("相手が切断しました");
     window.location.href = "connect.html";
     }
+   
   };
 
   ws.onclose = function() {
