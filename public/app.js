@@ -10,6 +10,9 @@ const gameFrameBlack = document.getElementById('gameFrameBlack');
 const enemyChara1 = document.getElementById('enemyChara1');
 const enemyChara2 = document.getElementById('enemyChara2');
 
+const otherenemyChara1 = document.getElementById('otherenemyChara1');
+const otherenemyChara2 = document.getElementById('otherenemyChara2');
+
 const waitingScreen = document.getElementById('waitingScreen');
 const SucccessConectScreen = document.getElementById('SucccessConectScreen');
 const gameScreen = document.getElementById('gameScreen');
@@ -81,11 +84,21 @@ function initializeCharacterPositions() {
     if (myRole === 'navigator') {
         myCircle.style.display = 'block'; // ナビゲーターは自分のキャラを表示
         otherCircle.style.display = 'none'; // 相手のキャラは非表示
+        otherenemyChara1.style.display = 'none'; // 相手の敵キャラ1を非表示
+        otherenemyChara2.style.display = 'none'; // 相手の敵キャラ2を非表示
+        enemyChara1.style.display = 'block'; // 自分の敵キャラ1を表示
+        enemyChara2.style.display = 'block'; // 自分の敵キャラ2を表示
+
         gameFrameBlack.classList.remove('dark-mode'); // 通常の背景色
         gameStatusMessage.textContent = 'あなたはナビゲーターです。キャラクターを操作して脱出を目指せ！';
     } else if (myRole === 'viewer') {
         myCircle.style.display = 'none'; // ビューアーは自分のキャラを非表示
         otherCircle.style.display = 'block'; // 相手のキャラ（ナビゲーターの動き）を表示
+        otherenemyChara1.style.display = 'block'; // 相手の敵キャラ1を表示
+        otherenemyChara2.style.display = 'block'; // 相手の敵キャラ2を表示
+        enemyChara1.style.display = 'none'; // 自分の敵キャラ1を非表示
+        enemyChara2.style.display = 'none'; // 自分の敵キャラ2を非表示
+        
         gameFrameBlack.classList.add('dark-mode'); // 暗い背景色
         gameStatusMessage.textContent = 'あなたはビューアーです。ナビゲーターの動きをサポートしよう！';
     }
@@ -228,7 +241,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 type: 'player_move',
                 id: myId,
                 x: myX,
-                y: myY
+                y: myY,
+                ex1:enemy1X,
+                ey1:enemy1Y,
+                ex2:enemy2X,
+                et2:enemy2Y
             };
             ws.send(JSON.stringify(message));
         }
