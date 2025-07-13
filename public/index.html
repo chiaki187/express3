@@ -95,12 +95,28 @@
             transition: top 0.05s linear, left 0.05s linear;
       }
 
+      /*敵キャラ*/
+      .enemyChara{
+            width: 50px; /* 適宜調整してください */
+            height: 50px; /* 適宜調整してください */
+            background-color: #ff2525;
+            border: 5px solid #2d1512;
+            border-radius: 50%; /* これで要素が丸くなります */
+
+
+            /* ★重要: JavaScriptで位置を制御するため追加★ */
+            position: absolute;
+            
+            /* ★スムーズに動かすための遷移効果 (任意) ★ */
+            transition: top 0.05s linear, left 0.05s linear;
+      }
+
       /*最初は非表示にしておく画面たち*/
+      /*#gameScreen
       #SucccessConectScreen,
-      #gameScreen,
       #gameScreen {
         display: none;
-      }
+      }*/
       
 
       
@@ -134,7 +150,9 @@
       <!--ゲームの枠-->
       
       <div id="gameFrame" class="gameFrame">
-        <div id="mainChara" class="mainChara"></div>
+        <div id="mainChara" class="mainChara"></div><!--操作可能キャラ-->
+        <div id="enemyChara1" class="enemyChara"></div><!--敵キャラ１-->
+        <div id="enemyChara2" class="enemyChara"></div><!--敵キャラ２-->
        <div class="gameFrameBalck"></div>
       </div>
       <div class="button-container">
@@ -150,31 +168,26 @@
 
 
        <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const myCircle = document.getElementById('mainChara');
+        const gameContainer = document.getElementById('gameFrame');
 
-          document.addEventListener('DOMContentLoaded', () => {
-            const myCircle = document.getElementById('mainChara');
-            const gameContainer = document.getElementById('gameFrame');
+        let circleX = 0;
+        let circleY = 150;
 
-            // 円の現在の位置 (top/leftプロパティから取得)
-            // transformプロパティを使っているため、ここでは中心ではなく、
-            // CSSのtop/leftで指定された基準点からのオフセットを直接計算します。
-            // あるいは、初期位置を直接指定します。ここでは初期位置を中心に設定します。
-            let circleX =0;
-            let circleY =150;
+        myCircle.style.left = `${circleX}px`;
+        myCircle.style.top = `${circleY}px`;
+        myCircle.style.transform = 'none';
 
-            // 円の初期位置をCSSに反映
-            myCircle.style.left = `${circleX}px`;
-            myCircle.style.top = `${circleY}px`;
-            myCircle.style.transform = 'none'; // transformを無効にするか、left/topでの調整に合わせる
+        const moveSpeed = 10;
 
-            const moveSpeed = 15; // 移動速度 (ピクセル/キー押し)
+        // キーボードイベントリスナー
+        document.addEventListener('keydown', (e) => {
+            let newX = circleX;
+            let newY = circleY;
 
-            // キーボードイベントリスナー
-            document.addEventListener('keydown', (e) => {
-                let newX = circleX;
-                let newY = circleY;
-
-                switch (e.key) {
+            // ...（キー入力によるメインキャラの移動ロジックはそのまま）...
+            switch (e.key) {
                     case 'ArrowUp':
                         newY -= moveSpeed;
                         break;
@@ -189,25 +202,20 @@
                         break;
                     default:
                         return; // 矢印キー以外は処理しない
-                }
+            }
 
-                // ブラウザのデフォルトスクロールを防ぐ
-                e.preventDefault();
+            e.preventDefault();
 
-                // 境界線チェック
-                // 左端 (0) と 右端 (コンテナの幅 - 円の幅)
-                newX = Math.max(0, Math.min(newX, gameContainer.offsetWidth - myCircle.offsetWidth));
-                // 上端 (0) と 下端 (コンテナの高さ - 円の高さ)
-                newY = Math.max(0, Math.min(newY, gameContainer.offsetHeight - myCircle.offsetHeight));
+            newX = Math.max(0, Math.min(newX, gameContainer.offsetWidth - myCircle.offsetWidth));
+            newY = Math.max(0, Math.min(newY, gameContainer.offsetHeight - myCircle.offsetHeight));
 
-                // 位置を更新
-                circleX = newX;
-                circleY = newY;
-                myCircle.style.left = `${circleX}px`;
-                myCircle.style.top = `${circleY}px`;
-            });
+            circleX = newX;
+            circleY = newY;
+            myCircle.style.left = `${circleX}px`;
+            myCircle.style.top = `${circleY}px`;
+        });
 
-            // ウィンドウリサイズ時の処理
+       // ウィンドウリサイズ時の処理
             window.addEventListener('resize', () => {
                 // コンテナと円のサイズを再取得
                 gameFrameWidth = gameFrame.offsetWidth;
@@ -217,68 +225,116 @@
                 myCircle.style.left = `${circleX}px`;
                 myCircle.style.top = `${circleY}px`;
             });
-        });
+         
+            // 敵キャラ設定
+        const enemyChara1 = document.getElementById('enemyChara1');
+        let enemy1X = 100;
+        let enemy1Y = 100;
+        const enemySpeed = 2;
+        let enemy1DirectionX = 1;
+        let enemy1DirectionY = 1;
 
+        const enemyChara2 = document.getElementById('enemyChara2');
+        let enemy2X = 300;
+        let enemy2Y = 300;
+        const enemySpeed2 = 2.5;
+        let enemy2DirectionX = -1;
+        let enemy2DirectionY = 1;
 
+        
 
-        function main() {
-            const host = location.origin.replace(/^http/, 'ws');
-            const ws = new WebSocket(host + '/ws');
-            const myId = self.crypto.randomUUID().substr(0, 8);
-
-            /* 画面のid取得 */
-            const waitingScreen = document.getElementById('waitingScreen');
-            const SucccessConectScreen = document.getElementById('SucccessConectScreen');
-            const gameScreen = document.getElementById('gameScreen');
-
-           
-
-
-            ws.onmessage = function (msg) {
-                const data = JSON.parse(msg.data);
-                console.log('クライアント: サーバーからメッセージを受信しました:', data);
+        function animate() {
+           // 敵キャラ１を自動で動かすロジックをここに移動
+            enemy1X += enemySpeed * enemy1DirectionX;
+            enemy1Y += enemySpeed * enemy1DirectionY;
             
-                if (data.type === 'ready') {
-                    waitingScreen.style.display = "none";
-                    SucccessConectScreen.style.display = "block";
-                    return;
-                }
-
-                // 'satrt' は 'start_game' などに合わせるべき
-                if (data.type === 'start_game') {
-                    SucccessConectScreen.style.display = "none";
-                    gameScreen.style.display = "block";
-                    const beforePushStartBtm = document.getElementById('BeforePush-startBtm');
-                    if (beforePushStartBtm) beforePushStartBtm.style.display = "none";
-                    const afterPushStartBtm = document.getElementById('AfterPush-startBtm');
-                    if (afterPushStartBtm) afterPushStartBtm.style.display = "none";
-                }
-            };
-
-            ws.onopen = function () {
-               
-            };
-
-            ws.onclose = function () {
-                // 切断メッセージ処理があればここに追加
-            };
-
-            // スタートボタンのクリックイベント
-            const startButton = document.getElementById('startButton');
-            if (startButton) {
-                startButton.onclick = function() {
-                    ws.send(JSON.stringify({ type: 'start_game', text: 'ゲームを開始します', id: myId }));
-                    const beforePushStartBtm = document.getElementById('BeforePush-startBtm');
-                    if (beforePushStartBtm) beforePushStartBtm.style.display = "none";
-                    const afterPushStartBtm = document.getElementById('AfterPush-startBtm');
-                    if (afterPushStartBtm) afterPushStartBtm.style.display = "block";
-                    startButton.style.display = "none";
-                };
+            if (enemy1X + enemyChara1.offsetWidth+80 >= gameContainer.offsetWidth || enemy1X <=80) {
+                enemy1DirectionX *= -1;
             }
+            if (enemy1Y + enemyChara1.offsetHeight >= gameContainer.offsetHeight || enemy1Y <= 0) {
+                enemy1DirectionY *= -1;
+            }
+
+            enemyChara1.style.left = `${enemy1X}px`;
+            enemyChara1.style.top = `${enemy1Y}px`;
+
+
+             // 敵キャラ２を自動で動かすロジックをここに移動
+            enemy2X += enemySpeed2 * enemy2DirectionX;
+            enemy2Y += enemySpeed2 * enemy2DirectionY;
+            
+            if (enemy2X + enemyChara2.offsetWidth+80 >= gameContainer.offsetWidth || enemy2X <=80) {
+                enemy2DirectionX *= -1;
+            }
+            if (enemy2Y + enemyChara2.offsetHeight >= gameContainer.offsetHeight || enemy2Y <= 0) {
+                enemy2DirectionY *= -1;
+            }
+
+            enemyChara2.style.left = `${enemy2X}px`;
+            enemyChara2.style.top = `${enemy2Y}px`;
+
+
+            
+
+            requestAnimationFrame(animate);
         }
 
-        // ページ読み込みが完了したらmain関数を実行
-        window.addEventListener('DOMContentLoaded', main);
-    </script>
-</body>
-</html>
+
+        
+
+        animate();
+        
+
+       
+    });
+
+    function main() {
+        const host = location.origin.replace(/^http/, 'ws');
+        const ws = new WebSocket(host + '/ws');
+        const myId = self.crypto.randomUUID().substr(0, 8);
+
+        const waitingScreen = document.getElementById('waitingScreen');
+        const SucccessConectScreen = document.getElementById('SucccessConectScreen');
+        const gameScreen = document.getElementById('gameScreen');
+
+        ws.onmessage = function (msg) {
+            const data = JSON.parse(msg.data);
+
+            if (data.type === 'ready') {
+                waitingScreen.style.display = "none";
+                SucccessConectScreen.style.display = "block";
+                return;
+            }
+            
+            if (data.type === 'start_game') {
+                SucccessConectScreen.style.display = "none";
+                gameScreen.style.display = "block";
+                const beforePushStartBtm = document.getElementById('BeforePush-startBtm');
+                if (beforePushStartBtm) beforePushStartBtm.style.display = "none";
+                const afterPushStartBtm = document.getElementById('AfterPush-startBtm');
+                if (afterPushStartBtm) afterPushStartBtm.style.display = "none";
+            }
+        };
+
+        ws.onopen = function () {
+           ws.send(JSON.stringify({ type: 'ready', text: '接続完了' }));
+        };
+
+        ws.onclose = function () {
+        };
+
+        const startButton = document.getElementById('startButton');
+        if (startButton) {
+            startButton.onclick = function() {
+                ws.send(JSON.stringify({ type: 'start_game', id: myId }));
+                const beforePushStartBtm = document.getElementById('BeforePush-startBtm');
+                if (beforePushStartBtm) beforePushStartBtm.style.display = "none";
+                const afterPushStartBtm = document.getElementById('AfterPush-startBtm');
+                if (afterPushStartBtm) afterPushStartBtm.style.display = "block";
+                startButton.style.display = "none";
+            };
+        }
+    }
+
+    window.addEventListener('DOMContentLoaded', main);
+</script>
