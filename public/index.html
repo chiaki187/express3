@@ -69,7 +69,7 @@
         overflow: hidden;   /* ★これがあるか確認！枠からはみ出さないようにする★ */
 
       }
-      .gameFrameBalck{
+      .gameFrameBlack{
         width: 80%;
         height: 400px;
   
@@ -112,11 +112,11 @@
       }
 
       /*最初は非表示にしておく画面たち*/
-      #gameScreen
+      /*#gameScreen
       #SucccessConectScreen,
       #gameScreen {
         display: none;
-      }
+      }*/
       
 
       
@@ -153,7 +153,7 @@
         <div id="mainChara" class="mainChara"></div><!--操作可能キャラ-->
         <div id="enemyChara1" class="enemyChara"></div><!--敵キャラ１-->
         <div id="enemyChara2" class="enemyChara"></div><!--敵キャラ２-->
-       <div class="gameFrameBalck"></div>
+       <div id="gameFrameBlack" class="gameFrameBlack"></div>
       </div>
       <div class="button-container">
         <button id="startButton" class="title retireBtm">ゲームリタイア</button>
@@ -171,6 +171,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         const myCircle = document.getElementById('mainChara');
         const gameContainer = document.getElementById('gameFrame');
+        const gameFrameBlack = document.getElementById('gameFrameBlack');
 
         let circleX = 0;
         let circleY = 150;
@@ -179,7 +180,7 @@
         myCircle.style.top = `${circleY}px`;
         myCircle.style.transform = 'none';
 
-        const moveSpeed = 10;
+        let moveSpeed = 10;
 
         // キーボードイベントリスナー
         document.addEventListener('keydown', (e) => {
@@ -230,14 +231,14 @@
         const enemyChara1 = document.getElementById('enemyChara1');
         let enemy1X = 100;
         let enemy1Y = 100;
-        const enemySpeed = 2;
+        let enemySpeed1 = 2;
         let enemy1DirectionX = 1;
         let enemy1DirectionY = 1;
 
         const enemyChara2 = document.getElementById('enemyChara2');
         let enemy2X = 300;
         let enemy2Y = 300;
-        const enemySpeed2 = 2.5;
+        let enemySpeed2 = 2.5;
         let enemy2DirectionX = -1;
         let enemy2DirectionY = 1;
 
@@ -245,8 +246,8 @@
 
         function animate() {
            // 敵キャラ１を自動で動かすロジックをここに移動
-            enemy1X += enemySpeed * enemy1DirectionX;
-            enemy1Y += enemySpeed * enemy1DirectionY;
+            enemy1X += enemySpeed1 * enemy1DirectionX;
+            enemy1Y += enemySpeed1 * enemy1DirectionY;
             
             if (enemy1X + enemyChara1.offsetWidth+80 >= gameContainer.offsetWidth || enemy1X <=80) {
                 enemy1DirectionX *= -1;
@@ -274,7 +275,46 @@
             enemyChara2.style.top = `${enemy2Y}px`;
 
 
+
+            //敵キャラとの衝突判定----------------------
+
+            //ぶつかった基準
+            const deadline=2500;
             
+            // 主人公キャラの中心座標を計算
+            let mainCharaCenterX=circleX+25;
+            let mainCharaCenterY=circleY+25;
+
+
+            // 敵キャラ１の中心座標を計算
+            let enemy1CenterX = enemy1X + 25;
+            let enemy1CenterY = enemy1Y + 25;
+
+            // 敵キャラ2の中心座標を計算
+            let enemy2CenterX = enemy2X + 25;
+            let enemy2CenterY = enemy2Y + 25;
+
+            let distance1=Math.pow((mainCharaCenterX-enemy1CenterX),2)+Math.pow((mainCharaCenterY-enemy1CenterY),2);
+            let distance2=Math.pow((mainCharaCenterX-enemy2CenterX),2)+Math.pow((mainCharaCenterY-enemy2CenterY),2);
+
+            //衝突したら
+            if(distance1<deadline||distance2<deadline){
+                enemySpeed1 = 0;
+                enemySpeed2 = 0;
+                moveSpeed = 0;
+                gameFrameBlack.style.backgroundColor="#ff0000";
+                //サーバーにゲームオーバーメッセージを送る
+
+                // ★衝突したことをサーバーに送信★
+              if (ws && ws.readyState === WebSocket.OPEN) {
+                  const message = {
+                      type: 'GameOver',
+                      message: 'プレイヤーが敵と衝突しました！',
+                  };
+                  console.log('ゲームオーバーって送ったよ！');
+                  ws.send(JSON.stringify(message));
+              }
+            }
 
             requestAnimationFrame(animate);
         }
