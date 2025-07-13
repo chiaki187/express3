@@ -327,6 +327,7 @@
         if (startButton) {
             startButton.onclick = function() {
                 ws.send(JSON.stringify({ type: 'start_game', id: myId }));
+                console.log('ゲームできるよ！');
                 const beforePushStartBtm = document.getElementById('BeforePush-startBtm');
                 if (beforePushStartBtm) beforePushStartBtm.style.display = "none";
                 const afterPushStartBtm = document.getElementById('AfterPush-startBtm');
