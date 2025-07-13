@@ -89,6 +89,7 @@ function initializeCharacterPositions() {
         gameFrameBlack.classList.add('dark-mode'); // 暗い背景色
         gameStatusMessage.textContent = 'あなたはビューアーです。ナビゲーターの動きをサポートしよう！';
     }
+    
 }
 
 
