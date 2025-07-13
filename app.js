@@ -30,6 +30,7 @@ if (data.type === 'user_ready') {
     ws.forEach((s) => {
       s.send(JSON.stringify({ type: 'game_start', text: 'ゲームを開始します' }));
     });
+    console.log('サーバー: 2人が準備完了。ゲームを開始します。');
   }
 }
 
