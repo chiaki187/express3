@@ -28,6 +28,9 @@
       .setColorGreen{
         color:rgb(113, 229, 45)
       }
+      .setColorClear{
+        color:rgb(113, 229, 255)
+      }
       .startBtm{
         display: block;
         margin: 0 auto;
@@ -45,6 +48,12 @@
         color: white;
   
         margin-left: auto;
+      }
+
+      /*ゲームオーバーとかゲームクリアとかの文字サイズとか*/
+      .bigSentence{
+        font-size: 60px;
+        margin-bottom: 200px;
       }
 
       /*retire,finishボタンの入れるコンテナ*/
@@ -159,6 +168,22 @@
         <button id="startButton" class="title retireBtm">ゲームリタイア</button>
         <button id="startButton" class="title finishBtm">ゲーム終了</button>
       </div>
+
+
+       <!--ゲームオーバー画面-->
+    <div id="gameOverScreen">
+      <h1 class="title center">ナビして！真っ暗 刑務所脱出ゲーム</h1>
+      <h1 class="bigSentence title-Space center setColorHightLight">Game Over</h1>
+      <button id="startButton" class="title startBtm center">replay</button>
+    </div>
+
+
+    <!--ゲームクリア画面-->
+    <div id="gameOverScreen">
+      <h1 class="title center">ナビして！真っ暗 刑務所脱出ゲーム</h1>
+      <h1 class="bigSentence title-Space center setColorClear">Game Clar!!!!</h1>
+      <button id="startButton" class="title startBtm center">replay</button>
+    </div>
       
     </div>
 
