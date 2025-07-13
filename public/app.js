@@ -72,6 +72,11 @@ function initializeCharacterPositions() {
     enemyChara2.style.left = `${enemy2X}px`;
     enemyChara2.style.top = `${enemy2Y}px`;
 
+    otherenemyChara1.style.left = `${enemy1X}px`;
+    otherenemyChara1.style.top = `${enemy1Y}px`;
+    otherenemyChara2.style.left = `${enemy2X}px`;
+    otherenemyChara2.style.top = `${enemy2Y}px`;
+
     // ゲームオーバー状態をリセット
     isGameOver = false;
     isGameClear = false;
@@ -327,13 +332,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 // 敵キャラクターの位置を更新 (ビューアーのみ)
                 enemy1X = data.enemy1X;
                 enemy1Y = data.enemy1Y;
-                otherenemyChara2 .style.left = `${enemy1X}px`;
-                otherenemyChara2 .style.top = `${enemy1Y}px`;
+                otherenemyChara1.style.left = `${enemy1X}px`;
+                otherenemyChara1style.top = `${enemy1Y}px`;
 
                 enemy2X = data.enemy2X;
                 enemy2Y = data.enemy2Y;
-                otherenemyChara2 .style.left = `${enemy2X}px`;
-                otherenemyChara2 .style.top = `${enemy2Y}px`;
+                otherenemyChara2.style.left = `${enemy2X}px`;
+                otherenemyChara2.style.top = `${enemy2Y}px`;
             }
         }
     };
