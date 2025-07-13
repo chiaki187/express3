@@ -119,6 +119,7 @@ function animate() {
         gameOverScreen.style.display = 'block';
         return; 
     }
+}
 
     // 敵キャラ1の移動
     enemy1X += enemySpeed1 * enemy1DirectionX;
@@ -313,8 +314,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 otherY = data.y;
                 otherCircle.style.left = `${otherX}px`;
                 otherCircle.style.top = `${otherY}px`;
-<<<<<<< HEAD
-=======
                 otherX = data.myX;
                 otherY = data.myY;
                 otherCircle.style.left = `${otherX}px`;
@@ -330,7 +329,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 enemy2Y = data.enemy2Y;
                 otherenemyChara2.style.left = `${enemy2X}px`;
                 otherenemyChara2.style.top = `${enemy2Y}px`;
->>>>>>> 7d176f5d56f3d455a2ab3c8ba8b4b3b2dfa01317
             }
         }
     };
