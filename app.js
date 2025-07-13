@@ -23,21 +23,10 @@ app.ws('/ws', (ws, req) => {
     })
 }
 
-if (data.type === 'user_ready') { //ユーザーがゲーム開始ボタンを押したら
-  if (!start.includes(socket)) {
-  start.push(socket); // socket を追加
-  console.log(`サーバー: ${start.length}人が準備完了です。`);
-  }
-  if (start.length === 2) { // 2人が準備完了したら
-    start.forEach((s) => {
-      s.send(JSON.stringify({ type: 'game_start', text: 'ゲームを開始します' }));
-    });
-    console.log('サーバー: 2人が準備完了。ゲームを開始します。');
-  }
-}
+
 
   // クライアントからのメッセージを受信
-  wss.on('connection', (socket) => {
+  ws.on('connection', (socket) => {
   socket.on('message', (message) => {
   const data = JSON.parse(message)
   console.log(`サーバー: メッセージを受信: ${data.text}`)
