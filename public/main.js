@@ -4,6 +4,9 @@ const expressWs = require('express-ws')
 const app = express()
 expressWs(app)
 
+const port = process.env.PORT || 3001
+let connects = []
+let start = []
 
 app.use(express.static('public'))
 
@@ -33,7 +36,18 @@ if (data.type === 'user_ready') { //ユーザーがゲーム開始ボタンを�
   }
 }
 
-//サーバーからメッセージを送信
+  // クライアントからのメッセージを受信
+  wss.on('connection', (socket) => {
+  socket.on('message', (message) => {
+  const data = JSON.parse(message)
+  console.log(`サーバー: メッセージを受信: ${data.text}`)
+  // メッセージの種類によって処理を分ける
+  })
+})
+  
+
+
+  //サーバーからメッセージを送信
   ws.on('message', (message) => {
     // ★クライアントから 'game_start' メッセージを受信した場合★
     if (data.type === 'game_start') {
@@ -53,3 +67,12 @@ if (data.type === 'user_ready') { //ユーザーがゲーム開始ボタンを�
       }
     } 
   })
+
+  ws.on('close', () => {
+    connects = connects.filter((conn) => conn !== ws)
+  })
+})
+
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`)
+})
