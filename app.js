@@ -49,6 +49,7 @@ if (data.type === 'user_ready') { //ユーザーがゲーム開始ボタンを�
 
   //サーバーからメッセージを送信
   ws.on('message', (message) => {
+    console.log("サーバーから通信が来たよ");
     // ★クライアントから 'game_start' メッセージを受信した場合★
     if (data.type === 'game_start') {
       console.log(`ゲーム開始リクエストを受信: ${data.text}`);
