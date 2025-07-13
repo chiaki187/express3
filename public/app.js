@@ -240,12 +240,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const message = {
                 type: 'player_move',
                 id: myId,
-                x: myX,
-                y: myY,
-                ex1:enemy1X,
-                ey1:enemy1Y,
-                ex2:enemy2X,
-                et2:enemy2Y
+                myX: myX,
+                myY: myY,
+                enemy1X: enemy1X,
+                enemy1Y: enemy1Y,
+                enemy2X: enemy2X,
+                enemy2Y: enemy2Y
             };
             ws.send(JSON.stringify(message));
         }
@@ -307,6 +307,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 otherY = data.y;
                 otherCircle.style.left = `${otherX}px`;
                 otherCircle.style.top = `${otherY}px`;
+            }
+        }// ★変更点★ ゲーム状態同期メッセージを受信したときの処理 (ビューアーのみが反応)
+        else if (data.type === 'game_state_sync') {
+            // 受信したIDが自分のIDと異なる場合（つまりナビゲーターの動き）
+            if (data.id !== myId) {
+                // 相手のキャラクターの位置を更新
+                otherX = data.myX;
+                otherY = data.myY;
+                otherCircle.style.left = `${otherX}px`;
+                otherCircle.style.top = `${otherY}px`;
+
+                // 敵キャラクターの位置を更新 (ビューアーのみ)
+                enemy1X = data.enemy1X;
+                enemy1Y = data.enemy1Y;
+                enemyChara1.style.left = `${enemy1X}px`;
+                enemyChara1.style.top = `${enemy1Y}px`;
+
+                enemy2X = data.enemy2X;
+                enemy2Y = data.enemy2Y;
+                enemyChara2.style.left = `${enemy2X}px`;
+                enemyChara2.style.top = `${enemy2Y}px`;
             }
         }
     };
