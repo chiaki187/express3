@@ -95,6 +95,7 @@ function initializeCharacterPositions() {
         myCircle.style.display = 'none'; // ビューアーは自分のキャラを非表示
         otherCircle.style.display = 'block'; // 相手のキャラ（ナビゲーターの動き）を表示
         otherenemyChara1.style.display = 'block'; // 相手の敵キャラ1を表示
+        
         otherenemyChara2.style.display = 'block'; // 相手の敵キャラ2を表示
         enemyChara1.style.display = 'none'; // 自分の敵キャラ1を非表示
         enemyChara2.style.display = 'none'; // 自分の敵キャラ2を非表示
@@ -315,13 +316,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 // 敵キャラクターの位置を更新 (ビューアーのみ)
                 enemy1X = data.enemy1X;
                 enemy1Y = data.enemy1Y;
-                enemyChara1.style.left = `${enemy1X}px`;
-                enemyChara1.style.top = `${enemy1Y}px`;
+                otherenemyChara2 .style.left = `${enemy1X}px`;
+                otherenemyChara2 .style.top = `${enemy1Y}px`;
 
                 enemy2X = data.enemy2X;
                 enemy2Y = data.enemy2Y;
-                enemyChara2.style.left = `${enemy2X}px`;
-                enemyChara2.style.top = `${enemy2Y}px`;
+                otherenemyChara2 .style.left = `${enemy2X}px`;
+                otherenemyChara2 .style.top = `${enemy2Y}px`;
             }
         }
     };
