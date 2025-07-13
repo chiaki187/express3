@@ -307,12 +307,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 otherY = data.y;
                 otherCircle.style.left = `${otherX}px`;
                 otherCircle.style.top = `${otherY}px`;
-            }
-        }// ★変更点★ ゲーム状態同期メッセージを受信したときの処理 (ビューアーのみが反応)
-        else if (data.type === 'game_state_sync') {
-            // 受信したIDが自分のIDと異なる場合（つまりナビゲーターの動き）
-            if (data.id !== myId) {
-                // 相手のキャラクターの位置を更新
                 otherX = data.myX;
                 otherY = data.myY;
                 otherCircle.style.left = `${otherX}px`;
