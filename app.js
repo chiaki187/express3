@@ -24,10 +24,12 @@ app.ws('/ws', (ws, req) => {
 }
 
 if (data.type === 'user_ready') {
+  if (!start.includes(socket)) {
   start.push(socket); // socket を追加
   console.log(`サーバー: ${start.length}人が準備完了です。`);
+  }
   if (start.length === 2) {
-    ws.forEach((s) => {
+    start.forEach((s) => {
       s.send(JSON.stringify({ type: 'game_start', text: 'ゲームを開始します' }));
     });
     console.log('サーバー: 2人が準備完了。ゲームを開始します。');
