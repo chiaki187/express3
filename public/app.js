@@ -1,5 +1,6 @@
 // ゲームの状態を管理するフラグ
 let isGameOver = false;
+let isGameClear = false;
 
 // DOM要素の取得
 const gameContainer = document.getElementById('gameFrame');
@@ -73,6 +74,7 @@ function initializeCharacterPositions() {
 
     // ゲームオーバー状態をリセット
     isGameOver = false;
+    isGameClear = false;
     // 背景色もリセット
     gameFrameBlack.style.backgroundColor = '#8484ff'; 
     // 速度もリセット
@@ -114,6 +116,15 @@ function animate() {
         gameOverScreen.style.display = 'block';
         return; 
     }
+}
+
+function animate() {
+    if (isGameClear) {
+        gameScreen.style.display = 'none';
+        gameClearScreen.style.display = 'block';
+        return; 
+    }
+}
 
     // 敵キャラ1の移動
     enemy1X += enemySpeed1 * enemy1DirectionX;
@@ -181,7 +192,7 @@ function animate() {
     // ゲームクリア判定 (myCharaが基準)
     const clearThresholdX = gameContainer.offsetWidth - myCircle.offsetWidth; 
     if (myX >= clearThresholdX) {
-        isGameOver = true;
+        isGameClear = true;
         gameFrameBlack.style.backgroundColor = '#00ffff';
         gameScreen.style.display = 'none';
         gameClearScreen.style.display = 'block';
@@ -199,7 +210,7 @@ function animate() {
     }
 
     requestAnimationFrame(animate);
-}
+
 
 // DOMContentLoadedイベントリスナー
 document.addEventListener('DOMContentLoaded', () => {
@@ -253,7 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     window.addEventListener('resize', () => {
-        if (!isGameOver && gameScreen.style.display === 'block') {
+        if ((!isGameOver && !isGameClear) && gameScreen.style.display === 'block') {
             initializeCharacterPositions();
         }
     });
@@ -295,7 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
             gameFrameBlack.style.backgroundColor = '#000000';
         } else if (data.type === 'GameClear') {
             console.log('クライアント: サーバーからゲームクリアメッセージを受信！');
-            isGameOver = true;
+            isGameClear = true;
             gameScreen.style.display = 'none';
             gameClearScreen.style.display = 'block';
             gameFrameBlack.style.backgroundColor = '#00ffff';
@@ -333,7 +344,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     ws.onclose = function () {
         console.log('クライアント: WebSocket接続が閉じました。');
-        if (!isGameOver) {
+        if (!isGameOver && !isGameClear) {
             alert('サーバーとの接続が切れました。');
         }
     };
