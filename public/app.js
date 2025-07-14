@@ -49,8 +49,8 @@ let myRole = null; // 自分の役割 (navigator or viewer)
 // キャラクターの位置を初期化する関数
 function initializeCharacterPositions() {
     // 主人公キャラ（myChara）をゲーム枠の中央に配置
-    myX = 150;
-    myY = 0;
+    myX = 0;
+    myY = 150;
     myCircle.style.left = `${myX}px`;
     myCircle.style.top = `${myY}px`;
     myCircle.style.transform = 'none';
@@ -263,8 +263,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const gameFrameContentWidth = gameContainer.offsetWidth; 
         const gameFrameContentHeight = gameContainer.offsetHeight;
 
-        newX = 150;
-        newY = 0;
+        newX = Math.max(0, Math.min(newX, gameFrameContentWidth - myCircle.offsetWidth));
+        newY = Math.max(0, Math.min(newY, gameFrameContentHeight - myCircle.offsetHeight));
 
         myX = newX;
         myY = newY;
