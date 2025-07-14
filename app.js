@@ -25,17 +25,18 @@ app.ws('/ws', (ws, req) => {
     // 各クライアントの準備状態を管理するためのフラグ
     ws.isReady = false; 
 
-    // 接続順に役割を割り当てる
+    // 接続順に役割を割り当てる (この時点では仮の割り当て)
     if (connectedClients.length === 1) {
-        ws.role = 'navigator'; // 最初の接続は操作者
-        console.log('サーバー: プレイヤー1 (ナビゲーター) が接続しました。');
-        ws.send(JSON.stringify({ type: 'role_assigned', role: 'navigator', message: 'あなたはナビゲーターです。' }));
+        ws.role = 'navigator'; // 仮の役割
+        console.log('サーバー: プレイヤー1 (仮のナビゲーター) が接続しました。');
     } else if (connectedClients.length === 2) {
-        ws.role = 'viewer'; // 2番目の接続は見る人
-        console.log('サーバー: プレイヤー2 (ビューアー) が接続しました。');
-        ws.send(JSON.stringify({ type: 'role_assigned', role: 'viewer', message: 'あなたはビューアーです。' }));
+        ws.role = 'viewer'; // 仮の役割
+        console.log('サーバー: プレイヤー2 (仮のビューアー) が接続しました。');
         
-        // 2人接続したら、両方のクライアントに「準備完了」を通知
+        // 2人接続したら、改めて役割を決定して通知
+        assignRolesAndNotify();
+
+        // 両方のクライアントに「準備完了」を通知
         console.log('サーバー: 2人接続しました。ゲーム開始準備完了を通知します。');
         connectedClients.forEach(socket => {
             if (socket.readyState === WebSocket.OPEN) {
@@ -89,7 +90,7 @@ app.ws('/ws', (ws, req) => {
                 }
             });
             isGameActive = false; // ゲームを非アクティブ状態にする
-            // readyPlayersCount と isReady は、リセットメッセージまたは切断時にリセットする
+            // readyPlayersCount と isReady は、reset_game_and_swap_roles または切断時にリセットする
         }
         // プレイヤーの移動情報を受信したときの処理
         else if (data.type === 'player_move') {
@@ -104,18 +105,10 @@ app.ws('/ws', (ws, req) => {
                 });
             }
         }
-        // ゲームリセットメッセージを受信したときの処理
-        else if (data.type === 'reset_game') {
-            console.log('サーバー: ゲームリセットメッセージを受信しました。ゲーム状態をリセットします。');
-            readyPlayersCount = 0;
-            isGameActive = false; // ゲームを非アクティブ状態にする
-            connectedClients.forEach(socket => {
-                socket.isReady = false;
-                if (socket.readyState === WebSocket.OPEN) {
-                    // クライアントにリセットが完了したことを通知
-                    socket.send(JSON.stringify({ type: 'game_reset_ack', message: 'ゲームがリセットされました。' }));
-                }
-            });
+        // ★追加★ ゲームリセットと役割交換メッセージを受信したときの処理
+        else if (data.type === 'reset_game_and_swap_roles') {
+            console.log('サーバー: ゲームリセットと役割交換メッセージを受信しました。');
+            resetGameAndSwapRoles();
         }
     });
 
@@ -130,14 +123,7 @@ app.ws('/ws', (ws, req) => {
 
         // もしプレイヤーが1人以下になったら、ゲーム状態をリセット
         if (connectedClients.length < 2) {
-            readyPlayersCount = 0;
-            isGameActive = false; // ゲームを非アクティブ状態にする
-            connectedClients.forEach(socket => {
-                socket.isReady = false;
-                if (socket.readyState === WebSocket.OPEN) {
-                    socket.send(JSON.stringify({ type: 'status', message: '相手が切断しました。ゲームを再開するにはもう一度接続してください。' }));
-                }
-            });
+            resetGameAndNotifyClients('相手が切断しました。ゲームを再開するにはもう一度接続してください。');
         }
     });
 
@@ -146,6 +132,76 @@ app.ws('/ws', (ws, req) => {
         console.error('サーバー: WebSocketエラーが発生しました:', error);
     });
 });
+
+/**
+ * 接続中のクライアントに役割を割り当て、通知する関数
+ */
+function assignRolesAndNotify() {
+    if (connectedClients.length === 2) {
+        // 現在の役割を把握
+        const currentNavigator = connectedClients.find(client => client.role === 'navigator');
+        const currentViewer = connectedClients.find(client => client.role === 'viewer');
+
+        // 役割を交換
+        if (currentNavigator && currentViewer) {
+            currentNavigator.role = 'viewer';
+            currentViewer.role = 'navigator';
+            console.log('サーバー: 役割を交換しました。');
+        } else {
+            // 初回接続時など、役割がまだ割り当てられていない場合
+            connectedClients[0].role = 'navigator';
+            connectedClients[1].role = 'viewer';
+            console.log('サーバー: 初回役割割り当てを行いました。');
+        }
+
+        // 新しい役割を各クライアントに通知
+        connectedClients.forEach(socket => {
+            if (socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify({ type: 'role_assigned', role: socket.role, message: `あなたの新しい役割は ${socket.role} です。` }));
+            }
+        });
+    }
+}
+
+/**
+ * ゲーム状態をリセットし、役割を交換してクライアントに通知する関数
+ */
+function resetGameAndSwapRoles() {
+    readyPlayersCount = 0;
+    isGameActive = false; // ゲームを非アクティブ状態にする
+
+    // 全クライアントの準備状態をリセット
+    connectedClients.forEach(socket => {
+        socket.isReady = false;
+    });
+
+    // 役割を交換して通知
+    assignRolesAndNotify();
+
+    // 全クライアントに「準備完了」メッセージを再送
+    connectedClients.forEach(socket => {
+        if (socket.readyState === WebSocket.OPEN) {
+            socket.send(JSON.stringify({ type: 'ready', text: 'ゲームがリセットされました。新しい役割で開始してください！' }));
+        }
+    });
+    console.log('サーバー: ゲーム状態をリセットし、役割を交換しました。');
+}
+
+/**
+ * ゲーム状態をリセットし、クライアントにステータスを通知する関数 (切断時など)
+ */
+function resetGameAndNotifyClients(message) {
+    readyPlayersCount = 0;
+    isGameActive = false;
+    connectedClients.forEach(socket => {
+        socket.isReady = false;
+        if (socket.readyState === WebSocket.OPEN) {
+            socket.send(JSON.stringify({ type: 'status', message: message }));
+        }
+    });
+    console.log(`サーバー: ゲーム状態をリセットしました。理由: ${message}`);
+}
+
 
 // 指定されたポートでサーバーを起動
 app.listen(port, () => {
