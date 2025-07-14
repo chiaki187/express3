@@ -83,7 +83,7 @@ function initializeCharacterPositions() {
     isGameOver = false;
     isGameClear = false;
     // 背景色もリセット
-    gameFrameBlack.style.backgroundColor = '#000000ff'; 
+    //gameFrameBlack.style.backgroundColor = '#000000ff'; 
     // 速度もリセット
     moveSpeed = 10;
     enemySpeed1 = 2;
@@ -99,7 +99,7 @@ function initializeCharacterPositions() {
         otherEnemyChara1.style.display = 'none'; // ビューアー側の敵キャラは非表示
         otherEnemyChara2.style.display = 'none';
 
-        gameFrameBlack.classList.remove('dark-mode'); // 通常の背景色
+       // gameFrameBlack.classList.remove('dark-mode'); // 通常の背景色
         gameStatusMessage.textContent = 'あなたは脱出役です、キャラクターを操作して脱出を目指せ！';
     } else if (myRole === 'viewer') {
         myCircle.style.display = 'none'; // ビューアーは自分のキャラを非表示
@@ -110,7 +110,7 @@ function initializeCharacterPositions() {
         otherEnemyChara1.style.display = 'block'; // ビューアー側の敵キャラを表示
         otherEnemyChara2.style.display = 'block';
 
-        gameFrameBlack.classList.add('dark-mode'); // 暗い背景色
+       // gameFrameBlack.classList.add('dark-mode'); // 暗い背景色
         gameStatusMessage.textContent = 'あなたはナビゲータです、脱出役にゴールまで案内しよう！';
     }
 }
