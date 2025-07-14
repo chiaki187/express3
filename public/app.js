@@ -83,7 +83,7 @@ function initializeCharacterPositions() {
     isGameOver = false;
     isGameClear = false;
     // 背景色もリセット
-    gameFrameBlack.style.backgroundColor = '#8484ff'; 
+    gameFrameBlack.style.backgroundColor = '#000000ff'; 
     // 速度もリセット
     moveSpeed = 10;
     enemySpeed1 = 2;
@@ -181,7 +181,7 @@ function animate() {
 
         if (distance1Squared < totalRadiusSquared || distance2Squared < totalRadiusSquared) {
             isGameOver = true;
-            gameFrameBlack.style.backgroundColor = '#000000';
+            gameFrameBlack.style.backgroundColor = '#ff0000ff';
             
             if (ws && ws.readyState === WebSocket.OPEN) {
                 const message = {
