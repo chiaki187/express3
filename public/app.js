@@ -315,7 +315,7 @@ document.addEventListener('DOMContentLoaded', () => {
             isGameOver = true;
             gameScreen.style.display = 'none';
             gameOverScreen.style.display = 'block';
-            gameFrameBlack.style.backgroundColor = '#000000';
+            gameFrameBlack.style.backgroundColor = '#ff0000ff';
         } else if (data.type === 'GameClear') {
             console.log('クライアント: サーバーからゲームクリアメッセージを受信！');
             isGameClear = true; // isGameClearを設定
