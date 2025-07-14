@@ -100,7 +100,7 @@ function initializeCharacterPositions() {
         otherEnemyChara2.style.display = 'none';
 
         gameFrameBlack.classList.remove('dark-mode'); // 通常の背景色
-        gameStatusMessage.textContent = 'あなたはナビゲーターです。キャラクターを操作して脱出を目指せ！';
+        gameStatusMessage.textContent = 'あなたは脱出役です、キャラクターを操作して脱出を目指せ！';
     } else if (myRole === 'viewer') {
         myCircle.style.display = 'none'; // ビューアーは自分のキャラを非表示
         otherCircle.style.display = 'block'; // 相手のキャラ（ナビゲーターの動き）を表示
@@ -111,7 +111,7 @@ function initializeCharacterPositions() {
         otherEnemyChara2.style.display = 'block';
 
         gameFrameBlack.classList.add('dark-mode'); // 暗い背景色
-        gameStatusMessage.textContent = 'あなたはビューアーです。ナビゲーターの動きをサポートしよう！';
+        gameStatusMessage.textContent = 'あなたはナビゲータです、脱出役にゴールまで案内しよう！';
     }
 }
 
@@ -263,8 +263,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const gameFrameContentWidth = gameContainer.offsetWidth; 
         const gameFrameContentHeight = gameContainer.offsetHeight;
 
-        newX = Math.max(0, Math.min(newX, gameFrameContentWidth - myCircle.offsetWidth));
-        newY = Math.max(0, Math.min(newY, gameFrameContentHeight - myCircle.offsetHeight));
+        newX = 150;
+        newY = 0;
 
         myX = newX;
         myY = newY;
