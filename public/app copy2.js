@@ -25,33 +25,21 @@ const clearReplayButton = document.getElementById('clearReplayButton');
 const gameStatusMessage = document.getElementById('gameStatusMessage'); // ゲーム中のメッセージ表示用
 
 // キャラクターとゲームの変数
-let myX = 0; // 自分のキャラクターのX座標 (ナビゲーターが操作)
-let myY = 150; // 自分のキャラクターのY座標 (ナビゲーターが操作)
+let myX = 0; // 自分のキャラクターのX座標
+let myY = 150; // 自分のキャラクターのY座標
+let otherX = 0; // 相手のキャラクターのX座標
+let otherY = 150; // 相手のキャラクターのY座標
 let moveSpeed = 10;
 
-// ビューアー側で補間するための変数
-let otherTargetX = 0; // 相手のキャラクターの目標X座標 (サーバーから受信)
-let otherTargetY = 150; // 相手のキャラクターの目標Y座標 (サーバーから受信)
-let otherCurrentX = 0; // 相手のキャラクターの現在の描画X座標
-let otherCurrentY = 150; // 相手のキャラクターの現在の描画Y座標
-
-let enemy1X, enemy1Y; // ナビゲーター側での敵1の座標
-let enemySpeed1 = 2; // 敵の速度を初期化時に設定
+let enemy1X, enemy1Y;
+let enemySpeed1 = 1;
 let enemy1DirectionX = 1;
 let enemy1DirectionY = 1;
 
-let enemy2X, enemy2Y; // ナビゲーター側での敵2の座標
-let enemySpeed2 = 2.5; // 敵の速度を初期化時に設定
+let enemy2X, enemy2Y;
+let enemySpeed2 = 1.5;
 let enemy2DirectionX = -1;
 let enemy2DirectionY = 1;
-
-// ビューアー側で敵キャラを補間するための変数
-let otherEnemy1TargetX, otherEnemy1TargetY;
-let otherEnemy1CurrentX, otherEnemy1CurrentY;
-let otherEnemy2TargetX, otherEnemy2TargetY;
-let otherEnemy2CurrentX, otherEnemy2CurrentY;
-
-const INTERPOLATION_FACTOR = 0.15; // 補間係数 (0.0～1.0, 大きいほど追従が速い)
 
 // WebSocket変数
 let ws;
@@ -60,50 +48,46 @@ let myRole = null; // 自分の役割 (navigator or viewer)
 
 // キャラクターの位置を初期化する関数
 function initializeCharacterPositions() {
-    // 主人公キャラ（myChara）をゲーム枠の左端中央に配置
+    // 主人公キャラ（myChara）をゲーム枠の中央に配置
     myX = 0;
     myY = 150;
-    myCircle.style.transform = `translate(${myX}px, ${myY}px)`; // transformを使用
+    myCircle.style.left = `${myX}px`;
+    myCircle.style.top = `${myY}px`;
+    myCircle.style.transform = 'none';
 
     // 相手キャラ（otherChara）も初期位置を設定
-    otherTargetX = myX;
-    otherTargetY = myY;
-    otherCurrentX = myX;
-    otherCurrentY = myY;
-    otherCircle.style.transform = `translate(${otherCurrentX}px, ${otherCurrentY}px)`; // transformを使用
+    otherX = myX; // 初期位置は同じにする
+    otherY = myY;
+    otherCircle.style.left = `${otherX}px`;
+    otherCircle.style.top = `${otherY}px`;
 
     // 敵キャラの初期位置を設定
     enemy1X = 100;
     enemy1Y = 100;
-    enemyChara1.style.transform = `translate(${enemy1X}px, ${enemy1Y}px)`; // transformを使用
+    enemyChara1.style.left = `${enemy1X}px`;
+    enemyChara1.style.top = `${enemy1Y}px`;
 
     enemy2X = 300;
     enemy2Y = 300;
-    enemyChara2.style.transform = `translate(${enemy2X}px, ${enemy2Y}px)`; // transformを使用
+    enemyChara2.style.left = `${enemy2X}px`;
+    enemyChara2.style.top = `${enemy2Y}px`;
 
-    // otherEnemyCharaの初期位置も設定（ビューアー側で補間するため、CurrentとTargetを初期化）
-    otherEnemy1TargetX = enemy1X;
-    otherEnemy1TargetY = enemy1Y;
-    otherEnemy1CurrentX = enemy1X;
-    otherEnemy1CurrentY = enemy1Y;
-    otherEnemyChara1.style.transform = `translate(${otherEnemy1CurrentX}px, ${otherEnemy1CurrentY}px)`; // transformを使用
-
-    otherEnemy2TargetX = enemy2X;
-    otherEnemy2TargetY = enemy2Y;
-    otherEnemy2CurrentX = enemy2X;
-    otherEnemy2CurrentY = enemy2Y;
-    otherEnemyChara2.style.transform = `translate(${otherEnemy2CurrentX}px, ${otherEnemy2CurrentY}px)`; // transformを使用
+    // otherEnemyCharaの初期位置も設定
+    otherEnemyChara1.style.left = `${enemy1X}px`;
+    otherEnemyChara1.style.top = `${enemy1Y}px`;
+    otherEnemyChara2.style.left = `${enemy2X}px`;
+    otherEnemyChara2.style.top = `${enemy2Y}px`;
 
 
     // ゲームオーバー/クリア状態をリセット
     isGameOver = false;
     isGameClear = false;
     // 背景色もリセット
-    gameFrameBlack.style.backgroundColor = '#8484ff'; 
+    //gameFrameBlack.style.backgroundColor = '#000000ff'; 
     // 速度もリセット
     moveSpeed = 10;
-    enemySpeed1 = 2; // initializeCharacterPositions内で速度をリセット
-    enemySpeed2 = 2.5; // initializeCharacterPositions内で速度をリセット
+    enemySpeed1 = 2;
+    enemySpeed2 = 2.5;
 
     // 役割に応じたキャラクターの表示/非表示と背景色の設定
     if (myRole === 'navigator') {
@@ -115,7 +99,7 @@ function initializeCharacterPositions() {
         otherEnemyChara1.style.display = 'none'; // ビューアー側の敵キャラは非表示
         otherEnemyChara2.style.display = 'none';
 
-        gameFrameBlack.classList.remove('dark-mode'); // 通常の背景色
+       // gameFrameBlack.classList.remove('dark-mode'); // 通常の背景色
         gameStatusMessage.textContent = 'あなたは脱出役です、キャラクターを操作して脱出を目指せ！';
     } else if (myRole === 'viewer') {
         myCircle.style.display = 'none'; // ビューアーは自分のキャラを非表示
@@ -126,7 +110,7 @@ function initializeCharacterPositions() {
         otherEnemyChara1.style.display = 'block'; // ビューアー側の敵キャラを表示
         otherEnemyChara2.style.display = 'block';
 
-        gameFrameBlack.classList.add('dark-mode'); // 暗い背景色
+       // gameFrameBlack.classList.add('dark-mode'); // 暗い背景色
         gameStatusMessage.textContent = 'あなたはナビゲータです、脱出役にゴールまで案内しよう！';
     }
 }
@@ -150,7 +134,7 @@ function animate() {
     if (myRole === 'navigator') {
         // 敵キャラ1の移動
         enemy1X += enemySpeed1 * enemy1DirectionX;
-        enemy1Y += enemySpeed1 * enemy1DirectionY; 
+        enemy1Y += enemySpeed1 * enemy1DirectionY; // ここを修正
         
         const blackAreaOffsetX = gameContainer.offsetWidth * 0.1;
         const blackAreaWidth = gameContainer.offsetWidth * 0.8;
@@ -162,7 +146,8 @@ function animate() {
         if (enemy1Y + enemyChara1.offsetHeight > gameAreaHeight || enemy1Y < 0) {
             enemy1DirectionY *= -1;
         }
-        enemyChara1.style.transform = `translate(${enemy1X}px, ${enemy1Y}px)`; // transformを使用
+        enemyChara1.style.left = `${enemy1X}px`;
+        enemyChara1.style.top = `${enemy1Y}px`;
 
         // 敵キャラ2の移動
         enemy2X += enemySpeed2 * enemy2DirectionX;
@@ -174,7 +159,8 @@ function animate() {
         if (enemy2Y + enemyChara2.offsetHeight > gameAreaHeight || enemy2Y < 0) {
             enemy2DirectionY *= -1;
         }
-        enemyChara2.style.transform = `translate(${enemy2X}px, ${enemy2Y}px)`; // transformを使用
+        enemyChara2.style.left = `${enemy2X}px`;
+        enemyChara2.style.top = `${enemy2Y}px`;
 
         // 円の衝突判定 (myCharaと敵キャラ)
         const myRadius = myCircle.offsetWidth / 2;
@@ -195,7 +181,7 @@ function animate() {
 
         if (distance1Squared < totalRadiusSquared || distance2Squared < totalRadiusSquared) {
             isGameOver = true;
-            gameFrameBlack.style.backgroundColor = '#ff0000'; // ゲームオーバー時の色
+            gameFrameBlack.style.backgroundColor = '#ff0000ff';
             
             if (ws && ws.readyState === WebSocket.OPEN) {
                 const message = {
@@ -213,7 +199,7 @@ function animate() {
         const clearThresholdX = gameContainer.offsetWidth - myCircle.offsetWidth; 
         if (myX >= clearThresholdX) {
             isGameClear = true; // isGameClearを設定
-            gameFrameBlack.style.backgroundColor = '#00ffff'; // ゲームクリア時の色
+            gameFrameBlack.style.backgroundColor = '#00ffff';
             gameScreen.style.display = 'none';
             gameClearScreen.style.display = 'block';
 
@@ -232,7 +218,7 @@ function animate() {
         // 自分のキャラクターと敵キャラクターの全状態をサーバーに送信 (ナビゲーターのみ)
         if (ws && ws.readyState === WebSocket.OPEN) {
             const message = {
-                type: 'player_move', 
+                type: 'player_move', // ★変更★ game_state_sync から player_move に変更
                 id: myId, // ナビゲーターのID
                 myX: myX,
                 myY: myY,
@@ -243,20 +229,9 @@ function animate() {
             };
             ws.send(JSON.stringify(message));
         }
-    } else if (myRole === 'viewer') {
-        // ビューアーの場合、受信した目標座標に向かって滑らかに補間
-        otherCurrentX += (otherTargetX - otherCurrentX) * INTERPOLATION_FACTOR;
-        otherCurrentY += (otherTargetY - otherCurrentY) * INTERPOLATION_FACTOR;
-        otherCircle.style.transform = `translate(${otherCurrentX}px, ${otherCurrentY}px)`;
-
-        otherEnemy1CurrentX += (otherEnemy1TargetX - otherEnemy1CurrentX) * INTERPOLATION_FACTOR;
-        otherEnemy1CurrentY += (otherEnemy1TargetY - otherEnemy1CurrentY) * INTERPOLATION_FACTOR;
-        otherEnemyChara1.style.transform = `translate(${otherEnemy1CurrentX}px, ${otherEnemy1CurrentY}px)`;
-
-        otherEnemy2CurrentX += (otherEnemy2TargetX - otherEnemy2CurrentX) * INTERPOLATION_FACTOR;
-        otherEnemy2CurrentY += (otherEnemy2TargetY - otherEnemy2CurrentY) * INTERPOLATION_FACTOR;
-        otherEnemyChara2.style.transform = `translate(${otherEnemy2CurrentX}px, ${otherEnemy2CurrentY}px)`;
     }
+    // ビューアーの場合、敵の動きは計算しない。受信した情報で更新される。
+    // 衝突判定やゲームクリア判定もナビゲーター側で処理され、結果がサーバー経由で来る。
 
     requestAnimationFrame(animate);
 }
@@ -293,14 +268,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         myX = newX;
         myY = newY;
-        myCircle.style.transform = `translate(${myX}px, ${myY}px)`; // transformを使用
+        myCircle.style.left = `${myX}px`;
+        myCircle.style.top = `${myY}px`;
 
         // キーダウンイベントでは自分のキャラの位置だけ更新し、
         // 敵キャラの位置を含むゲーム状態の同期はanimate()ループに任せる
     });
 
     window.addEventListener('resize', () => {
-        if ((!isGameOver && !isGameClear) && gameScreen.style.display === 'block') { 
+        if ((!isGameOver && !isGameClear) && gameScreen.style.display === 'block') { // isGameClearもチェック
             initializeCharacterPositions();
         }
     });
@@ -314,6 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (data.type === 'role_assigned') {
             myRole = data.role;
             console.log(`クライアント: あなたの役割は ${myRole} です。`);
+            // 役割に応じた初期UI表示（例：メッセージ）
             if (myRole === 'navigator') {
                 gameStatusMessage.textContent = 'あなたはナビゲーターです。キャラクターを操作して脱出を目指せ！';
             } else if (myRole === 'viewer') {
@@ -338,30 +315,38 @@ document.addEventListener('DOMContentLoaded', () => {
             isGameOver = true;
             gameScreen.style.display = 'none';
             gameOverScreen.style.display = 'block';
-            gameFrameBlack.style.backgroundColor = '#000000';
+            gameFrameBlack.style.backgroundColor = '#ff0000ff';
         } else if (data.type === 'GameClear') {
             console.log('クライアント: サーバーからゲームクリアメッセージを受信！');
-            isGameClear = true; 
+            isGameClear = true; // isGameClearを設定
             gameScreen.style.display = 'none';
             gameClearScreen.style.display = 'block';
             gameFrameBlack.style.backgroundColor = '#00ffff';
         } 
-        // ゲーム状態同期メッセージを受信したときの処理 (ビューアーのみが反応)
-        else if (data.type === 'player_move') { 
+        // ★変更点★ ゲーム状態同期メッセージを受信したときの処理 (ビューアーのみが反応)
+        else if (data.type === 'player_move') { // ★変更★ game_state_sync から player_move に変更
             // 受信したIDが自分のIDと異なる場合（つまりナビゲーターの動き）
             if (data.id !== myId) {
-                // 相手のキャラクターの目標位置を更新
-                otherTargetX = data.myX;
-                otherTargetY = data.myY;
+                // 相手のキャラクターの位置を更新
+                otherX = data.myX;
+                otherY = data.myY;
+                otherCircle.style.left = `${otherX}px`;
+                otherCircle.style.top = `${otherY}px`;
 
-                // 敵キャラクターの目標位置を更新 (ビューアーのみ)
-                otherEnemy1TargetX = data.enemy1X; 
-                otherEnemy1TargetY = data.enemy1Y;
-                otherEnemy2TargetX = data.enemy2X;
-                otherEnemy2TargetY = data.enemy2Y;
+                // 敵キャラクターの位置を更新 (ビューアーのみ)
+                enemy1X = data.enemy1X; // ビューアーのローカル変数を更新
+                enemy1Y = data.enemy1Y;
+                enemy2X = data.enemy2X;
+                enemy2Y = data.enemy2Y;
+
+                // ★修正★ otherEnemyChara1 と otherEnemyChara2 のスタイルを正しく更新
+                otherEnemyChara1.style.left = `${enemy1X}px`;
+                otherEnemyChara1.style.top = `${enemy1Y}px`;
+                otherEnemyChara2.style.left = `${enemy2X}px`;
+                otherEnemyChara2.style.top = `${enemy2Y}px`;
             }
         }
-        // ゲームリセット確認メッセージを受信したときの処理
+        // ★追加★ ゲームリセット確認メッセージを受信したときの処理
         else if (data.type === 'game_reset_ack') {
             console.log('クライアント: サーバーからゲームリセット確認を受信。ページをリロードします。');
             location.reload(); // サーバーがリセットされたことを確認してからリロード
@@ -382,6 +367,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     ws.onerror = function (error) {
         console.error('クライアント: WebSocketエラー:', error);
+        // alert('WebSocketエラーが発生しました。コンソールを確認してください。'); // alertは使用しない
+        // メッセージボックス表示などの代替手段を検討
         gameStatusMessage.textContent = 'WebSocketエラーが発生しました。コンソールを確認してください。';
     };
 
@@ -394,6 +381,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('AfterPush-startBtm').style.display = 'block';
                 startButton.style.display = 'none';
             } else {
+                // alert('サーバーに接続されていません。ページをリロードしてください。'); // alertは使用しない
                 gameStatusMessage.textContent = 'サーバーに接続されていません。ページをリロードしてください。';
             }
         };
@@ -402,26 +390,30 @@ document.addEventListener('DOMContentLoaded', () => {
     // ★変更★ リプレイボタンの処理
     if (replayButton) {
         replayButton.onclick = function() {
-            if (ws && ws.readyState === WebSocket.OPEN) {
-                ws.send(JSON.stringify({ type: 'reset_game' })); // サーバーにリセットを要求
-                console.log('クライアント: リプレイボタンを押したよ！サーバーにリセット要求を送信。');
-            } else {
-                // WebSocket接続がない場合は、サーバーにリセット要求を送れないため、直接リロード
-                location.reload(); 
-            }
+            // if (ws && ws.readyState === WebSocket.OPEN) {
+            //     ws.send(JSON.stringify({ type: 'reset_game' })); // サーバーにリセットを要求
+            //     console.log('クライアント: リプレイボタンを押したよ！サーバーにリセット要求を送信。');
+            // } else {
+            //     location.reload(); // 接続がない場合は直接リロード
+            // }
+
+            location.reload(); 
+     
         };
     }
 
     // ★変更★ クリア後のリプレイボタンの処理
     if (clearReplayButton) {
         clearReplayButton.onclick = function() {
-            if (ws && ws.readyState === WebSocket.OPEN) {
-                ws.send(JSON.stringify({ type: 'reset_game' })); // サーバーにリセットを要求
-                console.log('クライアント: クリア後のリプレイボタンを押したよ！サーバーにリセット要求を送信。');
-            } else {
-                // WebSocket接続がない場合は、サーバーにリセット要求を送れないため、直接リロード
-                location.reload(); 
-            }
+            // if (ws && ws.readyState === WebSocket.OPEN) {
+            //     ws.send(JSON.stringify({ type: 'reset_game' })); // サーバーにリセットを要求
+            //     console.log('クライアント: クリア後のリプレイボタンを押したよ！サーバーにリセット要求を送信。');
+            // } else {
+            //     location.reload(); // 接続がない場合は直接リロード
+            // }
+
+            location.reload(); 
+            //console.log("gameOver="+isGameOver+"Gameclaeris"+isGameClear);
         };
     }
 });
