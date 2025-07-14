@@ -346,6 +346,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 otherEnemyChara2.style.top = `${enemy2Y}px`;
             }
         }
+        // ★追加★ ゲームリセット確認メッセージを受信したときの処理
+        else if (data.type === 'game_reset_ack') {
+            console.log('クライアント: サーバーからゲームリセット確認を受信。ページをリロードします。');
+            location.reload(); // サーバーがリセットされたことを確認してからリロード
+        }
     };
 
     ws.onopen = function () {
@@ -354,14 +359,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     ws.onclose = function () {
         console.log('クライアント: WebSocket接続が閉じました。');
-        if (!isGameOver && !isGameClear) { // isGameClearもチェック
-            alert('サーバーとの接続が切れました。');
-        }
+        // サーバーからの明示的なリセットACKがない限り、リロードはしない
+        // if (!isGameOver && !isGameClear) { 
+        //     alert('サーバーとの接続が切れました。');
+        // }
     };
 
     ws.onerror = function (error) {
         console.error('クライアント: WebSocketエラー:', error);
-        alert('WebSocketエラーが発生しました。コンソールを確認してください。');
+        // alert('WebSocketエラーが発生しました。コンソールを確認してください。'); // alertは使用しない
+        // メッセージボックス表示などの代替手段を検討
+        gameStatusMessage.textContent = 'WebSocketエラーが発生しました。コンソールを確認してください。';
     };
 
     if (startButton) {
@@ -373,22 +381,43 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('AfterPush-startBtm').style.display = 'block';
                 startButton.style.display = 'none';
             } else {
-                alert('サーバーに接続されていません。ページをリロードしてください。');
+                // alert('サーバーに接続されていません。ページをリロードしてください。'); // alertは使用しない
+                gameStatusMessage.textContent = 'サーバーに接続されていません。ページをリロードしてください。';
             }
         };
     }
 
+    // ★変更★ リプレイボタンの処理
     if (replayButton) {
         replayButton.onclick = function() {
+<<<<<<< HEAD
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ type: 'reset_game' })); // サーバーにリセットを要求
+                console.log('クライアント: リプレイボタンを押したよ！サーバーにリセット要求を送信。');
+            } else {
+                location.reload(); // 接続がない場合は直接リロード
+            }
+=======
             location.reload(); 
             console.log("gameOver="+isGameOver+"Gameclaeris"+isGameClear);
+>>>>>>> f233d8e3cc8ec90ef708a6f3c62b161b15877582
         };
     }
 
+    // ★変更★ クリア後のリプレイボタンの処理
     if (clearReplayButton) {
         clearReplayButton.onclick = function() {
+<<<<<<< HEAD
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ type: 'reset_game' })); // サーバーにリセットを要求
+                console.log('クライアント: クリア後のリプレイボタンを押したよ！サーバーにリセット要求を送信。');
+            } else {
+                location.reload(); // 接続がない場合は直接リロード
+            }
+=======
             location.reload(); 
             console.log("gameOver="+isGameOver+"Gameclaeris"+isGameClear);
+>>>>>>> f233d8e3cc8ec90ef708a6f3c62b161b15877582
         };
     }
 });
