@@ -32,12 +32,12 @@ let otherY = 150; // 相手のキャラクターのY座標
 let moveSpeed = 10;
 
 let enemy1X, enemy1Y;
-let enemySpeed1 = 2;
+let enemySpeed1 = 1;
 let enemy1DirectionX = 1;
 let enemy1DirectionY = 1;
 
 let enemy2X, enemy2Y;
-let enemySpeed2 = 2.5;
+let enemySpeed2 = 1.5;
 let enemy2DirectionX = -1;
 let enemy2DirectionY = 1;
 
@@ -381,12 +381,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (replayButton) {
         replayButton.onclick = function() {
             location.reload(); 
+            console.log("gameOver="+isGameOver+"Gameclaeris"+isGameClear);
         };
     }
 
     if (clearReplayButton) {
         clearReplayButton.onclick = function() {
             location.reload(); 
+            console.log("gameOver="+isGameOver+"Gameclaeris"+isGameClear);
         };
     }
 });
