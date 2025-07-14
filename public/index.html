@@ -96,7 +96,8 @@
         border: 5px solid #b6e4f5;
         border-radius: 50%;
         position: absolute;
-        transition: top 0.05s linear, left 0.05s linear;
+        transition: transform 0.05s linear;
+        
         z-index: 1;
       }
       .otherChara { /* 相手のキャラ（ビューアーが見るナビゲーターのキャラ） */
@@ -106,7 +107,7 @@
         border: 5px solid #ffffff;
         border-radius: 50%;
         position: absolute;
-        transition: top 0.05s linear, left 0.05s linear;
+        transition: transform 0.05s linear;
         z-index: 1;
       }
 
@@ -134,15 +135,16 @@
   <body>
     <!--最初に入った人の接続待ち画面-->
     <div id="waitingScreen">
-      <h1 class="title title-Space center">ナビして！真っ暗</h1>
-      <h1 class="title center">刑務所脱出ゲーム</h1>
+      <h1 class="title center">ナビして！真っ暗 刑務所脱出ゲーム</h1>
+      <h2 class="center setColorDarkClear">刑務所が突然停電した！</h2>
+      <h2 class="center setColorDarkClear">今こそ脱獄するときである</h2>
+      <h2 class="center setColorDarkClear">でも囚人たちは真っ暗で出口が分からない...</h2>
+      <h2 class="center setColorDarkClear">だからサポーターからナビをしてもらって脱獄しよう！！</h2>
       <h2 class="msg-Fromgame title-Space center">相手の接続を待っているよ</h2>
     </div>
 
     <!--接続が完了-->
     <div id="SucccessConectScreen">
-      <h1 class="title title-Space center">ナビして！真っ暗</h1>
-      <h1 class="title center">刑務所脱出ゲーム</h1>
       <h1 class="title center">ナビして！真っ暗 刑務所脱出ゲーム</h1>
       <h2 class="center setColorDarkClear">刑務所が突然停電した！</h2>
       <h2 class="center setColorDarkClear">今こそ脱獄するときである</h2>
