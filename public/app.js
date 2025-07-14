@@ -404,7 +404,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    // ★変更★ リプレイボタンの処理
+    // リプレイボタンの処理
     if (replayButton) {
         replayButton.onclick = function() {
             if (ws && ws.readyState === WebSocket.OPEN) {
@@ -426,7 +426,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    // ★変更★ クリア後のリプレイボタンの処理
+    // クリア後のリプレイボタンの処理
     if (clearReplayButton) {
         clearReplayButton.onclick = function() {
             if (ws && ws.readyState === WebSocket.OPEN) {
