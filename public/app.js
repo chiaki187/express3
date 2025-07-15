@@ -103,6 +103,8 @@ function initializeCharacterPositions() {
         enemyChara2.style.display = 'none';
         otherEnemyChara1.style.display = 'none'; // ビューアー側の敵キャラは非表示
         otherEnemyChara2.style.display = 'none';
+        gameClearScreen.style.display = 'none'; // ゲームクリア画面を非表示
+        gameOverScreen.style.display = 'none'; // ゲームオーバー画面を非表示
 
         gameFrameBlack.style.backgroundColor = '#000000ff'; 
         gameStatusMessage.textContent = 'あなたは脱出役です、キャラクターを操作して脱出を目指せ！';
@@ -114,6 +116,8 @@ function initializeCharacterPositions() {
         enemyChara2.style.display = 'none';
         otherEnemyChara1.style.display = 'block'; // ビューアー側の敵キャラを表示
         otherEnemyChara2.style.display = 'block';
+        gameClearScreen.style.display = 'none'; // ゲームクリア画面を非表示
+        gameOverScreen.style.display = 'none'; // ゲームオーバー画面を非表示
 
         gameFrameBlack.style.backgroundColor = '#3bc244ff'; 
         gameStatusMessage.textContent = 'あなたはナビゲータです、脱出役にゴールまで案内しよう！';
@@ -308,8 +312,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 gameStatusMessage.textContent = 'あなたはビューアーです。ナビゲーターの動きをサポートしよう！';
             }
             // 役割が割り当てられたら、ゲームオーバー/クリア画面を隠し、接続完了画面を表示
-            gameOverScreen.style.display = 'block';
-            gameClearScreen.style.display = 'block';
             waitingScreen.style.display = 'none'; // waitingScreenも隠す
             SucccessConectScreen.style.display = 'block';
             document.getElementById('BeforePush-startBtm').style.display = 'block'; // スタートボタンのメッセージを表示
