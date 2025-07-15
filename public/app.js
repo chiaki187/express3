@@ -101,8 +101,8 @@ function initializeCharacterPositions() {
 
         enemyChara1.style.display = 'none'; // ナビゲーター側の敵キャラを表示
         enemyChara2.style.display = 'none';
-        otherEnemyChara1.style.display = 'none'; // ビューアー側の敵キャラは非表示
-        otherEnemyChara2.style.display = 'none';
+       // otherEnemyChara1.style.display = 'none'; // ビューアー側の敵キャラは非表示
+        //otherEnemyChara2.style.display = 'none';
         gameClearScreen.style.display = 'none'; // ゲームクリア画面を非表示
         gameOverScreen.style.display = 'none'; // ゲームオーバー画面を非表示
 
