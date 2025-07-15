@@ -308,8 +308,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 gameStatusMessage.textContent = 'あなたはビューアーです。ナビゲーターの動きをサポートしよう！';
             }
             // 役割が割り当てられたら、ゲームオーバー/クリア画面を隠し、接続完了画面を表示
-            gameOverScreen.style.display = 'none';
-            gameClearScreen.style.display = 'none';
+            gameOverScreen.style.display = 'block';
+            gameClearScreen.style.display = 'block';
             waitingScreen.style.display = 'none'; // waitingScreenも隠す
             SucccessConectScreen.style.display = 'block';
             document.getElementById('BeforePush-startBtm').style.display = 'block'; // スタートボタンのメッセージを表示
