@@ -42,8 +42,6 @@ const startButton = document.getElementById('startButton');
 const replayButton = document.getElementById('replayButton');
 const clearReplayButton = document.getElementById('clearReplayButton');
 const gameStatusMessage = document.getElementById('gameStatusMessage'); // ゲーム中のメッセージ表示用
-const carousel = document.getElementById('carousel');
-carousel
 
 // キャラクターとゲームの変数
 let myX = 0; // 自分のキャラクターのX座標
@@ -120,13 +118,10 @@ function initializeCharacterPositions() {
         myCircle.style.display = 'block'; // ナビゲーターは自分のキャラを表示
         otherCircle.style.display = 'none'; // 相手のキャラは非表示
 
-        enemyChara1.style.display = 'block'; // ナビゲーター側の敵キャラを表示
-        enemyChara2.style.display = 'block';
+        enemyChara1.style.display = 'none'; // ナビゲーター側の敵キャラを表示
+        enemyChara2.style.display = 'none';
         otherEnemyChara1.style.display = 'none'; // ビューアー側の敵キャラは非表示
         otherEnemyChara2.style.display = 'none';
-        gameClearScreen.style.display = 'none'; // ゲームクリア画面を非表示
-        gameOverScreen.style.display = 'none'; // ゲームオーバー画面を非表示
-        carousel.style.display = 'block'; // カルーセルを表示
 
         gameFrameBlack.style.backgroundColor = '#000000ff'; 
         gameStatusMessage.textContent = 'あなたは脱出役です、キャラクターを操作して脱出を目指せ！';
@@ -138,9 +133,6 @@ function initializeCharacterPositions() {
         enemyChara2.style.display = 'none';
         otherEnemyChara1.style.display = 'block'; // ビューアー側の敵キャラを表示
         otherEnemyChara2.style.display = 'block';
-        gameClearScreen.style.display = 'none'; // ゲームクリア画面を非表示
-        gameOverScreen.style.display = 'none'; // ゲームオーバー画面を非表示
-        carousel.style.display = 'block'; // カルーセルを表示
 
         gameFrameBlack.style.backgroundColor = '#3bc244ff'; 
         gameStatusMessage.textContent = 'あなたはナビゲータです、脱出役にゴールまで案内しよう！';
@@ -180,8 +172,6 @@ function animate() {
         }
         enemyChara1.style.left = `${enemy1X}px`; // left/topを使用
         enemyChara1.style.top = `${enemy1Y}px`; // left/topを使用
-        otherEnemyChara1.style.left = `${enemy2X}px`; // left/topを使用
-        otherEnemyChara1.style.top = `${enemy2Y}px`; // left/topを使用
 
         // 敵キャラ2の移動
         enemy2X += enemySpeed2 * enemy2DirectionX;
@@ -190,13 +180,11 @@ function animate() {
         if (enemy2X + enemyChara2.offsetWidth > blackAreaOffsetX + blackAreaWidth || enemy2X < blackAreaOffsetX) {
             enemy2DirectionX *= -1;
         }
-        if (enemy2Y + enemyChara2.offsetHeight > gameAreaHeight || enemy2Y <0) {
+        if (enemy2Y + enemyChara2.offsetHeight > gameAreaHeight || enemy2Y < 0) {
             enemy2DirectionY *= -1;
         }
         enemyChara2.style.left = `${enemy2X}px`; // left/topを使用
         enemyChara2.style.top = `${enemy2Y}px`; // left/topを使用
-        otherEnemyChara2.style.left = `${enemy2X}px`; // left/topを使用
-        otherEnemyChara2.style.top = `${enemy2Y}px`; // left/topを使用
 
         // 円の衝突判定 (myCharaと敵キャラ)
         const myRadius = myCircle.offsetWidth / 2;
@@ -339,6 +327,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 gameStatusMessage.textContent = 'あなたはビューアーです。ナビゲーターの動きをサポートしよう！';
             }
             // 役割が割り当てられたら、ゲームオーバー/クリア画面を隠し、接続完了画面を表示
+            gameOverScreen.style.display = 'none';
+            gameClearScreen.style.display = 'none';
             waitingScreen.style.display = 'none'; // waitingScreenも隠す
             SucccessConectScreen.style.display = 'block';
             document.getElementById('BeforePush-startBtm').style.display = 'block'; // スタートボタンのメッセージを表示
