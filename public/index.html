@@ -123,206 +123,66 @@
         z-index: 1;
       }
 
-      /*説明文*/
-      /* カルーセル全体 */
-      .carousel {
-        /* 水平方向中央寄せ */
-        display: flex;
-        justify-content: center;
-      }
-      /* カルーセル内容 */
-      .contains {
-        /* サイズは自由に変更してください。*/
-        /* 下の.slideも同じサイズにしてください。 */
-        width: 700px;
-        height: 600px;
-        overflow: hidden;
-        position: relative;
-        padding: 0;
-        list-style: none;
-      }
-      /* スライド切り換え用ラジオボタンは常に非表示 */
-      .slide_select {
-        display: none;
-      }
-      /* 各スライド */
-      .slide {
-        /* サイズは自由に変更してください。*/
-        /* 上の.containsも同じサイズにしてください。 */
-        width: 700px;
-        height: 600px;
-        position: absolute;
-        /* スライドの初期値は選択されていないので透明にしておく */
-        opacity: 0;
-      }
-      /* 前へ次へボタン */
-      .scroll_button {
-        position: absolute;
-        display: block;
-        height: 30px;
-        width: 30px;
-        /* 縦中央から20px上の位置 */
-        top: 50%;
-        margin-top: -20px;
-      /* 上辺と右辺のみ幅5pxの枠線 */
-        border-width: 5px 5px 0 0;
-        border-style: solid;
-        border-color: #000000;
-        cursor: pointer;
-        /* 普段はボタンはやや薄くする */
-        opacity: 0.5;
-        /* スライドよりも前面にする */
-        z-index: 3;
-      }
-      /* ホバー時にボタンを強調 */
-      .scroll_button:hover {
-        opacity: 1;
-      }
-      /* 前へボタン */
-      .scroll_prev {
-        left: 15px;
-        /* 上辺と右辺の枠線を回転して"＜"にする */
-        transform: rotate(-135deg);
-      }
-      /* 次へボタン */
-      .scroll_next {
-        right: 15px;
-        /* 上辺と右辺の枠線を回転して"＞"にする */
-        transform: rotate(45deg);
-      }
-      /* スライド移動ボタンエリア */
-      .move_controler {
-        position: absolute;
-        bottom: 20px;
-        margin-top: 100px;
-        width: 100%;
-        text-align: center;
-      }
-      /* スライド移動の各ボタン */
-      .button_move {
-        display: inline-block;
-        height: 15px;
-        width: 15px;
-        margin: 0 2px;
-        border-radius: 100%;
-        cursor: pointer;
-        /* 普段はやや薄くする */
-        opacity: 0.5;
-        /* スライドより前面にする */
-        z-index: 2;
-      }
-      /* ホバー時はやや明るくする */
-      .button_move:hover {
-        opacity: 0.75;
-      }
-      /* スライド移動ボタンの色 */
-      .button_move {
-        background-color: #000000;
-      }
-      /* 1番目のスライド選択時 */
-      /* 1番目のスライドの透明度を0にして表示する */
-      .slide_select:nth-of-type(1):checked ~ .slide:nth-of-type(1) {
-        opacity: 1;
-      }
-      /* 1番目のスライドの前へ次へボタンの領域を */
-      .slide_select:nth-of-type(1):checked
-        ~ .move_controler
-        .button_move:nth-of-type(1) {
-        opacity: 1;
-      }
-      .slide_select:nth-of-type(2):checked ~ .slide:nth-of-type(2) {
-        opacity: 1;
-      }
-      .slide_select:nth-of-type(2):checked
-        ~ .move_controler
-        .button_move:nth-of-type(2) {
-        opacity: 1;
-      }
-      .slide_select:nth-of-type(3):checked ~ .slide:nth-of-type(3) {
-        opacity: 1;
-      }
-      .slide_select:nth-of-type(3):checked
-        ~ .move_controler
-        .button_move:nth-of-type(3) {
-        opacity: 1;
-      }
-      .slide_select:nth-of-type(4):checked ~ .slide:nth-of-type(4) {
-        opacity: 1;
-      }
-      .slide_select:nth-of-type(4):checked
-        ~ .move_controler
-        .button_move:nth-of-type(4) {
-        opacity: 1;
-      }
-      .slide_select:nth-of-type(5):checked ~ .slide:nth-of-type(5) {
-        opacity: 1;
-      }
-      .slide_select:nth-of-type(5):checked
-        ~ .move_controler
-        .button_move:nth-of-type(5) {
-        opacity: 1;
-      }
 
 
+      /*説明画面*/
+     .slideshow-container {
+          max-width: 700px; /* 指定された幅 */
+          max-height: 500px; /* 指定された高さ */
+          position: relative;
+          margin: auto;
+          overflow: hidden; /* はみ出した画像を隠す */
+      }
 
-      /*/------------------*/
-      .slideshow-container {
-    max-width: 700px; /* 指定された幅 */
-    max-height: 500px; /* 指定された高さ */
-    position: relative;
-    margin: auto;
-    overflow: hidden; /* はみ出した画像を隠す */
-}
+      .mySlides {
+          display: none; /* 初期状態では全ての画像を非表示 */
+      }
 
-.mySlides {
-    display: none; /* 初期状態では全ての画像を非表示 */
-}
+      .mySlides img {
+          width: 100%;
+          height: 500px; /* 指定された高さ */
+          object-fit: cover; /* 画像がコンテナに収まるように調整 */
+      }
 
-.mySlides img {
-    width: 100%;
-    height: 500px; /* 指定された高さ */
-    object-fit: cover; /* 画像がコンテナに収まるように調整 */
-}
+      /* 左右の矢印ボタン */
+      .prev, .next {
+          cursor: pointer;
+          position: absolute;
+          top: 50%;
+          width: auto;
+          padding: 16px;
+          margin-top: -22px;
+          color: white;
+          font-weight: bold;
+          font-size: 30px;
+          transition: 0.6s ease;
+          border-radius: 0 3px 3px 0;
+          user-select: none;
+          background-color: rgba(0,0,0,0.5); /* 半透明の背景 */
+      }
 
-/* 左右の矢印ボタン */
-.prev, .next {
-    cursor: pointer;
-    position: absolute;
-    top: 50%;
-    width: auto;
-    padding: 16px;
-    margin-top: -22px;
-    color: white;
-    font-weight: bold;
-    font-size: 30px;
-    transition: 0.6s ease;
-    border-radius: 0 3px 3px 0;
-    user-select: none;
-    background-color: rgba(0,0,0,0.5); /* 半透明の背景 */
-}
+      /* 次へボタンを右に配置 */
+      .next {
+          right: 0;
+          border-radius: 3px 0 0 3px;
+      }
 
-/* 次へボタンを右に配置 */
-.next {
-    right: 0;
-    border-radius: 3px 0 0 3px;
-}
+      /* ホバー時のスタイル */
+      .prev:hover, .next:hover {
+          background-color: rgba(0,0,0,0.8);
+      }
 
-/* ホバー時のスタイル */
-.prev:hover, .next:hover {
-    background-color: rgba(0,0,0,0.8);
-}
+      /* フェードインアニメーション */
+      .fade {
+          animation-name: fade;
+          animation-duration: 1.5s;
+      }
 
-/* フェードインアニメーション */
-.fade {
-    animation-name: fade;
-    animation-duration: 1.5s;
-}
-
-@keyframes fade {
-    from {opacity: .4}
-    to {opacity: 1}
-}
-      
+      @keyframes fade {
+          from {opacity: .4}
+          to {opacity: 1}
+      }
+            
 
 
 
@@ -342,7 +202,6 @@
     <div id="waitingScreen">
       <h1 class="title center">ナビして！真っ暗 刑務所脱出ゲーム</h1>
       
-      <img src="4.png">
        <div class="slideshow-container">
         <div class="mySlides fade">
             <img src="0.png" style="width:100%">
@@ -377,76 +236,30 @@
 
 
 
-       <div class="carousel">
-        <!-- スライドのリスト -->
-        <div class="contains">
-          <!-- スライドを選択するためのラジオボタンリスト。 -->
-          <!-- 数は増減しても構わないです。 最初は1番目を選択状態(checked)にします。-->
-          <!-- Slide各ラジオボタンに個別のidを定義して、nameはすべて同じ値にします。 -->
-          <input class="slide_select" type="radio" id="SlideA" name="slide_check" checked />
-          <input class="slide_select" type="radio" id="SlideB" name="slide_check" />
-          <input class="slide_select" type="radio" id="SlideC" name="slide_check" />
-          <input class="slide_select" type="radio" id="SlideD" name="slide_check" />
-          <input class="slide_select" type="radio" id="SlideE" name="slide_check" />
-          <!-- スライド -->
-          <!-- 上のラジオボックスと同じ数だけ記述します。-->
-          <div class="slide">
-            <!-- スライドの前へ、次へとスクロールさせるボタン -->
-            <div class="scroll_controler">
-              <!-- 前へボタン forで戻る先のラジオボタンのidを書きます。-->
-              <!-- 先頭要素なので、最後のスライドのidである"SlideD"を書いています。 -->
-              <label class="scroll_button scroll_prev" for="SlideE"></label>
-              <!-- 次へボタン 上と同様にforで進む先のラジオボタンのidを書きます。-->
-              <!-- 進み先は2番目の要素なので、2番目のスライドのid"SlideB"を書いています。 -->
-              <label class="scroll_button scroll_next" for="SlideB"></label>
-            </div>
-            <!-- スライドの内容（ここでは画像）を記述します。 -->
-            <!-- div要素に変えれば文字を加えることもできます。 -->
-            <img src="0.png">
-          </div>
-          <!-- スライド（2番目）内容は1個めと同じ -->
-          <div class="slide">
-            <div class="controler_scroll">
-              <label class="scroll_button scroll_prev" for="SlideA"></label>
-              <label class="scroll_button scroll_next" for="SlideC"></label>
-            </div>
-            <img src="1.png">
-          </div>
-          <div class="slide">
-            <div class="controler_scroll">
-              <label class="scroll_button scroll_prev" for="SlideB"></label>
-              <label class="scroll_button scroll_next" for="SlideD"></label>
-            </div>
-            <img src="2.png">
-          </div>
-          <!-- スライド（3番目）内容は1個めと同じ -->
-          <div class="slide">
-            <div class="controler_scroll">
-              <label class="scroll_button scroll_prev" for="SlideC"></label>
-              <label class="scroll_button scroll_next" for="SlideE"></label>
-            </div>
-            <img src="3.png">
-          </div>
-          <!-- スライド（4番目）内容は1個めと同じ -->
-          <div class="slide">
-            <div class="controler_scroll">
-              <label class="scroll_button scroll_prev" for="SlideE"></label>
-              <label class="scroll_button scroll_next" for="SlideA"></label>
-            </div>
-            <img src="4.png">
-          </div>
-          <!-- スライド移動用ボタン -->
-          <div class="move_controler">
-            <!-- 1個目のスライドのボタン -->
-            <!-- 一番上のラジオボタンの1個目のスライドのid”A”をforに定義します-->
-            <label class="button_move" for="SlideA"></label>
-            <label class="button_move" for="SlideB"></label>
-            <label class="button_move" for="SlideC"></label>
-            <label class="button_move" for="SlideD"></label>
-            <label class="button_move" for="SlideE"></label>
-          </div>
+       <div class="slideshow-container">
+        <div class="mySlides fade">
+            <img src="0.png" style="width:100%">
         </div>
-      </div>
+
+        <div class="mySlides fade">
+            <img src="1.png" style="width:100%">
+        </div>
+
+        <div class="mySlides fade">
+            <img src="2.png" style="width:100%">
+        </div>
+
+        <div class="mySlides fade">
+            <img src="3.png" style="width:100%">
+        </div>
+
+        <div class="mySlides fade">
+            <img src="4.png" style="width:100%">
+        </div>
+
+        <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+        <a class="next" onclick="plusSlides(1)">&#10095;</a>
+    </div>
 
 
       <h2 class="msg-Fromgame title-Space setColorHightLight center" id="BeforePush-startBtm">接続が完了したよ！ゲーム開始ボタンを押そう↓</h2>

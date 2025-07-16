@@ -1,3 +1,5 @@
+//説明画面のスクロール
+
 let slideIndex = 1;
 showSlides(slideIndex);
 
