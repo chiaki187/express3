@@ -172,6 +172,8 @@ function animate() {
         }
         enemyChara1.style.left = `${enemy1X}px`; // left/topを使用
         enemyChara1.style.top = `${enemy1Y}px`; // left/topを使用
+        otherEnemyChara1.style.left = `${enemy1X}px`; // left/topを使用
+        otherEnemyChara1.style.top = `${enemy1Y}px`; // left/topを使用
 
         // 敵キャラ2の移動
         enemy2X += enemySpeed2 * enemy2DirectionX;
@@ -185,6 +187,8 @@ function animate() {
         }
         enemyChara2.style.left = `${enemy2X}px`; // left/topを使用
         enemyChara2.style.top = `${enemy2Y}px`; // left/topを使用
+        otherEnemyChara2.style.left = `${enemy1X}px`; // left/topを使用
+        otherEnemyChara2.style.top = `${enemy1Y}px`; // left/topを使用
 
         // 円の衝突判定 (myCharaと敵キャラ)
         const myRadius = myCircle.offsetWidth / 2;
