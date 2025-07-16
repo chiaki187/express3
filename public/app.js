@@ -109,8 +109,6 @@ function initializeCharacterPositions() {
     // ゲームオーバー/クリア状態をリセット
     isGameOver = false;
     isGameClear = false;
-    // 背景色もリセット
-    gameFrameBlack.style.backgroundColor = '#8484ff'; 
     // 速度もリセット
     moveSpeed = 10;
     enemySpeed1 = 1; // initializeCharacterPositions内で速度をリセット
