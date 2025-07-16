@@ -118,8 +118,8 @@ function initializeCharacterPositions() {
         myCircle.style.display = 'block'; // ナビゲーターは自分のキャラを表示
         otherCircle.style.display = 'none'; // 相手のキャラは非表示
 
-        enemyChara1.style.display = 'block'; // ナビゲーター側の敵キャラを表示
-        enemyChara2.style.display = 'block';
+        enemyChara1.style.display = 'none'; // ナビゲーター側の敵キャラを表示
+        enemyChara2.style.display = 'none';
         otherEnemyChara1.style.display = 'none'; // ビューアー側の敵キャラは非表示
         otherEnemyChara2.style.display = 'none';
 
