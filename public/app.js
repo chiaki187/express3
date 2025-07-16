@@ -23,6 +23,8 @@ const startButton = document.getElementById('startButton');
 const replayButton = document.getElementById('replayButton');
 const clearReplayButton = document.getElementById('clearReplayButton');
 const gameStatusMessage = document.getElementById('gameStatusMessage'); // ゲーム中のメッセージ表示用
+const carousel = document.getElementById('carousel');
+carousel
 
 // キャラクターとゲームの変数
 let myX = 0; // 自分のキャラクターのX座標
@@ -105,6 +107,7 @@ function initializeCharacterPositions() {
         otherEnemyChara2.style.display = 'none';
         gameClearScreen.style.display = 'none'; // ゲームクリア画面を非表示
         gameOverScreen.style.display = 'none'; // ゲームオーバー画面を非表示
+        carousel.style.display = 'block'; // カルーセルを表示
 
         gameFrameBlack.style.backgroundColor = '#000000ff'; 
         gameStatusMessage.textContent = 'あなたは脱出役です、キャラクターを操作して脱出を目指せ！';
@@ -118,6 +121,7 @@ function initializeCharacterPositions() {
         otherEnemyChara2.style.display = 'block';
         gameClearScreen.style.display = 'none'; // ゲームクリア画面を非表示
         gameOverScreen.style.display = 'none'; // ゲームオーバー画面を非表示
+        carousel.style.display = 'block'; // カルーセルを表示
 
         gameFrameBlack.style.backgroundColor = '#3bc244ff'; 
         gameStatusMessage.textContent = 'あなたはナビゲータです、脱出役にゴールまで案内しよう！';
