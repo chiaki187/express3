@@ -123,17 +123,12 @@
         z-index: 1;
       }
 
-      
-
-
-      
-/*説明文*/
+      /*説明文*/
       /* カルーセル全体 */
       .carousel {
         /* 水平方向中央寄せ */
         display: flex;
         justify-content: center;
-        margin-bottom: 20px; /* カルーセルと次の要素の間にスペース */
       }
       /* カルーセル内容 */
       .contains {
@@ -155,16 +150,10 @@
         /* サイズは自由に変更してください。*/
         /* 上の.containsも同じサイズにしてください。 */
         width: 700px;
-        height: 500px; /* 画像の高さに合わせて調整 */
+        height: 600px;
         position: absolute;
         /* スライドの初期値は選択されていないので透明にしておく */
         opacity: 0;
-        transition: opacity 0.5s ease-in-out; /* スライド切り替えを滑らかにする */
-      }
-      .slide img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain; /* 画像がはみ出さないように調整 */
       }
       /* 前へ次へボタン */
       .scroll_button {
@@ -205,7 +194,7 @@
       .move_controler {
         position: absolute;
         bottom: 20px;
-        /* margin-top: 100px; */ /* 不要なため削除 */
+        margin-top: 100px;
         width: 100%;
         text-align: center;
       }
@@ -293,63 +282,76 @@
       <h1 class="title center">ナビして！真っ暗 刑務所脱出ゲーム</h1>
       
 
-<div class="carousel">
+       <div class="carousel" id="carousel">
         <!-- スライドのリスト -->
         <div class="contains">
           <!-- スライドを選択するためのラジオボタンリスト。 -->
-          <!-- name属性をユニークに設定 -->
-          <input class="slide_select" type="radio" id="waitingSlideA" name="waiting_slide_check" checked />
-          <input class="slide_select" type="radio" id="waitingSlideB" name="waiting_slide_check" />
-          <input class="slide_select" type="radio" id="waitingSlideC" name="waiting_slide_check" />
-          <input class="slide_select" type="radio" id="waitingSlideD" name="waiting_slide_check" />
-          <input class="slide_select" type="radio" id="waitingSlideE" name="waiting_slide_check" />
+          <!-- 数は増減しても構わないです。 最初は1番目を選択状態(checked)にします。-->
+          <!-- Slide各ラジオボタンに個別のidを定義して、nameはすべて同じ値にします。 -->
+          <input class="slide_select" type="radio" id="SlideA" name="slide_check" checked />
+          <input class="slide_select" type="radio" id="SlideB" name="slide_check" />
+          <input class="slide_select" type="radio" id="SlideC" name="slide_check" />
+          <input class="slide_select" type="radio" id="SlideD" name="slide_check" />
+          <input class="slide_select" type="radio" id="SlideE" name="slide_check" />
           <!-- スライド -->
+          <!-- 上のラジオボックスと同じ数だけ記述します。-->
           <div class="slide">
+            <!-- スライドの前へ、次へとスクロールさせるボタン -->
             <div class="scroll_controler">
-              <label class="scroll_button scroll_prev" for="waitingSlideE"></label>
-              <label class="scroll_button scroll_next" for="waitingSlideB"></label>
+              <!-- 前へボタン forで戻る先のラジオボタンのidを書きます。-->
+              <!-- 先頭要素なので、最後のスライドのidである"SlideD"を書いています。 -->
+              <label class="scroll_button scroll_prev" for="SlideE"></label>
+              <!-- 次へボタン 上と同様にforで進む先のラジオボタンのidを書きます。-->
+              <!-- 進み先は2番目の要素なので、2番目のスライドのid"SlideB"を書いています。 -->
+              <label class="scroll_button scroll_next" for="SlideB"></label>
             </div>
+            <!-- スライドの内容（ここでは画像）を記述します。 -->
+            <!-- div要素に変えれば文字を加えることもできます。 -->
             <img src="0.png">
           </div>
+          <!-- スライド（2番目）内容は1個めと同じ -->
           <div class="slide">
-            <div class="scroll_controler">
-              <label class="scroll_button scroll_prev" for="waitingSlideA"></label>
-              <label class="scroll_button scroll_next" for="waitingSlideC"></label>
+            <div class="controler_scroll">
+              <label class="scroll_button scroll_prev" for="SlideA"></label>
+              <label class="scroll_button scroll_next" for="SlideC"></label>
             </div>
             <img src="1.png">
           </div>
           <div class="slide">
             <div class="controler_scroll">
-              <label class="scroll_button scroll_prev" for="waitingSlideB"></label>
-              <label class="scroll_button scroll_next" for="waitingSlideD"></label>
+              <label class="scroll_button scroll_prev" for="SlideB"></label>
+              <label class="scroll_button scroll_next" for="SlideD"></label>
             </div>
             <img src="2.png">
           </div>
+          <!-- スライド（3番目）内容は1個めと同じ -->
           <div class="slide">
             <div class="controler_scroll">
-              <label class="scroll_button scroll_prev" for="waitingSlideC"></label>
-              <label class="scroll_button scroll_next" for="waitingSlideE"></label>
+              <label class="scroll_button scroll_prev" for="SlideC"></label>
+              <label class="scroll_button scroll_next" for="SlideE"></label>
             </div>
             <img src="3.png">
           </div>
+          <!-- スライド（4番目）内容は1個めと同じ -->
           <div class="slide">
             <div class="controler_scroll">
-              <label class="scroll_button scroll_prev" for="waitingSlideD"></label>
-              <label class="scroll_button scroll_next" for="waitingSlideA"></label>
+              <label class="scroll_button scroll_prev" for="SlideE"></label>
+              <label class="scroll_button scroll_next" for="SlideA"></label>
             </div>
             <img src="4.png">
           </div>
           <!-- スライド移動用ボタン -->
           <div class="move_controler">
-            <label class="button_move" for="waitingSlideA"></label>
-            <label class="button_move" for="waitingSlideB"></label>
-            <label class="button_move" for="waitingSlideC"></label>
-            <label class="button_move" for="waitingSlideD"></label>
-            <label class="button_move" for="waitingSlideE"></label>
+            <!-- 1個目のスライドのボタン -->
+            <!-- 一番上のラジオボタンの1個目のスライドのid”A”をforに定義します-->
+            <label class="button_move" for="SlideA"></label>
+            <label class="button_move" for="SlideB"></label>
+            <label class="button_move" for="SlideC"></label>
+            <label class="button_move" for="SlideD"></label>
+            <label class="button_move" for="SlideE"></label>
           </div>
         </div>
       </div>
-      
 
       
       <h2 class="msg-Fromgame title-Space center">相手の接続を待っているよ</h2>
@@ -361,63 +363,76 @@
 
 
 
- <div class="carousel">
+       <div class="carousel">
         <!-- スライドのリスト -->
         <div class="contains">
           <!-- スライドを選択するためのラジオボタンリスト。 -->
-          <!-- name属性をユニークに設定 -->
-          <input class="slide_select" type="radio" id="waitingSlideA" name="waiting_slide_check" checked />
-          <input class="slide_select" type="radio" id="waitingSlideB" name="waiting_slide_check" />
-          <input class="slide_select" type="radio" id="waitingSlideC" name="waiting_slide_check" />
-          <input class="slide_select" type="radio" id="waitingSlideD" name="waiting_slide_check" />
-          <input class="slide_select" type="radio" id="waitingSlideE" name="waiting_slide_check" />
+          <!-- 数は増減しても構わないです。 最初は1番目を選択状態(checked)にします。-->
+          <!-- Slide各ラジオボタンに個別のidを定義して、nameはすべて同じ値にします。 -->
+          <input class="slide_select" type="radio" id="SlideA" name="slide_check" checked />
+          <input class="slide_select" type="radio" id="SlideB" name="slide_check" />
+          <input class="slide_select" type="radio" id="SlideC" name="slide_check" />
+          <input class="slide_select" type="radio" id="SlideD" name="slide_check" />
+          <input class="slide_select" type="radio" id="SlideE" name="slide_check" />
           <!-- スライド -->
+          <!-- 上のラジオボックスと同じ数だけ記述します。-->
           <div class="slide">
+            <!-- スライドの前へ、次へとスクロールさせるボタン -->
             <div class="scroll_controler">
-              <label class="scroll_button scroll_prev" for="waitingSlideE"></label>
-              <label class="scroll_button scroll_next" for="waitingSlideB"></label>
+              <!-- 前へボタン forで戻る先のラジオボタンのidを書きます。-->
+              <!-- 先頭要素なので、最後のスライドのidである"SlideD"を書いています。 -->
+              <label class="scroll_button scroll_prev" for="SlideE"></label>
+              <!-- 次へボタン 上と同様にforで進む先のラジオボタンのidを書きます。-->
+              <!-- 進み先は2番目の要素なので、2番目のスライドのid"SlideB"を書いています。 -->
+              <label class="scroll_button scroll_next" for="SlideB"></label>
             </div>
+            <!-- スライドの内容（ここでは画像）を記述します。 -->
+            <!-- div要素に変えれば文字を加えることもできます。 -->
             <img src="0.png">
           </div>
+          <!-- スライド（2番目）内容は1個めと同じ -->
           <div class="slide">
-            <div class="scroll_controler">
-              <label class="scroll_button scroll_prev" for="waitingSlideA"></label>
-              <label class="scroll_button scroll_next" for="waitingSlideC"></label>
+            <div class="controler_scroll">
+              <label class="scroll_button scroll_prev" for="SlideA"></label>
+              <label class="scroll_button scroll_next" for="SlideC"></label>
             </div>
             <img src="1.png">
           </div>
           <div class="slide">
             <div class="controler_scroll">
-              <label class="scroll_button scroll_prev" for="waitingSlideB"></label>
-              <label class="scroll_button scroll_next" for="waitingSlideD"></label>
+              <label class="scroll_button scroll_prev" for="SlideB"></label>
+              <label class="scroll_button scroll_next" for="SlideD"></label>
             </div>
             <img src="2.png">
           </div>
+          <!-- スライド（3番目）内容は1個めと同じ -->
           <div class="slide">
             <div class="controler_scroll">
-              <label class="scroll_button scroll_prev" for="waitingSlideC"></label>
-              <label class="scroll_button scroll_next" for="waitingSlideE"></label>
+              <label class="scroll_button scroll_prev" for="SlideC"></label>
+              <label class="scroll_button scroll_next" for="SlideE"></label>
             </div>
             <img src="3.png">
           </div>
+          <!-- スライド（4番目）内容は1個めと同じ -->
           <div class="slide">
             <div class="controler_scroll">
-              <label class="scroll_button scroll_prev" for="waitingSlideD"></label>
-              <label class="scroll_button scroll_next" for="waitingSlideA"></label>
+              <label class="scroll_button scroll_prev" for="SlideE"></label>
+              <label class="scroll_button scroll_next" for="SlideA"></label>
             </div>
             <img src="4.png">
           </div>
           <!-- スライド移動用ボタン -->
           <div class="move_controler">
-            <label class="button_move" for="waitingSlideA"></label>
-            <label class="button_move" for="waitingSlideB"></label>
-            <label class="button_move" for="waitingSlideC"></label>
-            <label class="button_move" for="waitingSlideD"></label>
-            <label class="button_move" for="waitingSlideE"></label>
+            <!-- 1個目のスライドのボタン -->
+            <!-- 一番上のラジオボタンの1個目のスライドのid”A”をforに定義します-->
+            <label class="button_move" for="SlideA"></label>
+            <label class="button_move" for="SlideB"></label>
+            <label class="button_move" for="SlideC"></label>
+            <label class="button_move" for="SlideD"></label>
+            <label class="button_move" for="SlideE"></label>
           </div>
         </div>
       </div>
-      
 
 
       <h2 class="msg-Fromgame title-Space setColorHightLight center" id="BeforePush-startBtm">接続が完了したよ！ゲーム開始ボタンを押そう↓</h2>
