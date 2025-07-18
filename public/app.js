@@ -167,7 +167,7 @@ function animate() {
         if (enemy1X + enemyChara1.offsetWidth > blackAreaOffsetX  || enemy1X < blackAreaOffsetX) {
             enemy1DirectionX *= -1;
         }
-        if (enemy1Y + enemyChara1.offsetHeight+25 > gameAreaHeight || enemy1Y < 0) {
+        if (enemy1Y + enemyChara1.offsetHeight > gameAreaHeight || enemy1Y < 0) {
             enemy1DirectionY *= -1;
         }
         enemyChara1.style.left = `${enemy1X}px`; // left/topを使用
@@ -182,7 +182,7 @@ function animate() {
         if (enemy2X + enemyChara2.offsetWidth  > blackAreaOffsetX  || enemy2X < blackAreaOffsetX) {
             enemy2DirectionX *= -1;
         }
-        if (enemy2Y + enemyChara2.offsetHeight+25  > gameAreaHeight || enemy2Y < 0) {
+        if (enemy2Y + enemyChara2.offsetHeight  > gameAreaHeight || enemy2Y < 0) {
             enemy2DirectionY *= -1;
         }
         enemyChara2.style.left = `${enemy2X}px`; // left/topを使用
