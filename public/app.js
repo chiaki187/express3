@@ -161,13 +161,14 @@ function animate() {
         enemy1Y += enemySpeed1 * enemy1DirectionY; 
         
         const blackAreaOffsetX = gameContainer.offsetWidth * 0.1;
+        const blackAreaOffsetY = gameContainer.offsetHeight * 0.1;
         const blackAreaWidth = gameContainer.offsetWidth * 0.8;
         const gameAreaHeight = gameContainer.offsetHeight;
 
-        if (enemy1X + enemyChara1.offsetWidth+25 > blackAreaOffsetX + blackAreaWidth || enemy1X < blackAreaOffsetX) {
+        if (enemy1X + enemyChara1.offsetWidth > blackAreaOffsetX  || enemy1X < blackAreaOffsetX) {
             enemy1DirectionX *= -1;
         }
-        if (enemy1Y + enemyChara1.offsetHeight+25 > gameAreaHeight || enemy1Y < 0) {
+        if (enemy1Y + enemyChara1.offsetHeight+25 > blackAreaOffsetY || enemy1Y < 0) {
             enemy1DirectionY *= -1;
         }
         enemyChara1.style.left = `${enemy1X}px`; // left/topを使用
@@ -179,10 +180,10 @@ function animate() {
         enemy2X += enemySpeed2 * enemy2DirectionX;
         enemy2Y += enemySpeed2 * enemy2DirectionY;
         
-        if (enemy2X + enemyChara2.offsetWidth+25  > blackAreaOffsetX + blackAreaWidth || enemy2X < blackAreaOffsetX) {
+        if (enemy2X + enemyChara2.offsetWidth  > blackAreaOffsetX  || enemy2X < blackAreaOffsetX) {
             enemy2DirectionX *= -1;
         }
-        if (enemy2Y + enemyChara2.offsetHeight+25  > gameAreaHeight || enemy2Y < 0) {
+        if (enemy2Y + enemyChara2.offsetHeight > blackAreaOffsetY  || enemy2Y < 0) {
             enemy2DirectionY *= -1;
         }
         enemyChara2.style.left = `${enemy2X}px`; // left/topを使用
