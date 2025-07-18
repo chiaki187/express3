@@ -103,6 +103,10 @@ function initializeCharacterPositions() {
     otherEnemyChara2.style.transform = 'none'; // transformをリセット
 
 
+    const blackAreaRight = blackAreaLeft + gameFrameBlack.offsetWidth;
+    const blackAreaBottom = blackAreaTop + gameFrameBlack.offsetHeight;
+
+
     // ゲームオーバー/クリア状態をリセット
     isGameOver = false;
     isGameClear = false;
@@ -164,7 +168,7 @@ function animate() {
         const blackAreaWidth = gameContainer.offsetWidth * 0.8;
         const gameAreaHeight = gameContainer.offsetHeight;
 
-        if (enemy1X + enemyChara1.offsetWidth > blackAreaOffsetX  || enemy1X < blackAreaOffsetX) {
+        if (enemy1X + 25 > blackAreaRight || enemy1X < blackAreaLeft) {
             enemy1DirectionX *= -1;
         }
         if (enemy1Y + enemyChara1.offsetHeight > gameAreaHeight || enemy1Y < 0) {
@@ -179,7 +183,7 @@ function animate() {
         enemy2X += enemySpeed2 * enemy2DirectionX;
         enemy2Y += enemySpeed2 * enemy2DirectionY;
         
-        if (enemy2X + enemyChara2.offsetWidth  > blackAreaOffsetX  || enemy2X < blackAreaOffsetX) {
+        if (enemy2X + 25> blackAreaRight || enemy2X < blackAreaLeft) {
             enemy2DirectionX *= -1;
         }
         if (enemy2Y + enemyChara2.offsetHeight  > gameAreaHeight || enemy2Y < 0) {
