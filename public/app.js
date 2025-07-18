@@ -164,10 +164,10 @@ function animate() {
         const blackAreaWidth = gameContainer.offsetWidth * 0.8;
         const gameAreaHeight = gameContainer.offsetHeight;
 
-        if (enemy1X + enemyChara1.offsetWidth > blackAreaOffsetX + blackAreaWidth || enemy1X < blackAreaOffsetX) {
+        if (enemy1X + enemyChara1.offsetWidth-25 > blackAreaOffsetX + blackAreaWidth || enemy1X < blackAreaOffsetX) {
             enemy1DirectionX *= -1;
         }
-        if (enemy1Y + enemyChara1.offsetHeight > gameAreaHeight || enemy1Y < 0) {
+        if (enemy1Y + enemyChara1.offsetHeight-25 > gameAreaHeight || enemy1Y < 0) {
             enemy1DirectionY *= -1;
         }
         enemyChara1.style.left = `${enemy1X}px`; // left/topを使用
