@@ -166,9 +166,10 @@ function animate() {
         const blackAreaOffsetX = gameContainer.offsetWidth * 0.1;
         const blackAreaWidth = gameContainer.offsetWidth * 0.8;
         const gameAreaHeight = gameContainer.offsetHeight;
+        const gameAreaWidth = gameFrameBlack.offsetLeft;
 
         
-        if (enemy1X + enemyChara1.offsetWidth > blackAreaOffsetX + blackAreaWidth || enemy1X < blackAreaOffsetX/2) {
+        if (enemy1X + enemyChara1.offsetWidth > blackAreaOffsetX + blackAreaWidth || enemy1X < gameAreaWidth) {
             enemy1DirectionX *= -1;
         }
         if (enemy1Y + enemyChara1.offsetHeight > gameAreaHeight || enemy1Y < 0) {
@@ -183,7 +184,7 @@ function animate() {
         enemy2X += enemySpeed2 * enemy2DirectionX;
         enemy2Y += enemySpeed2 * enemy2DirectionY;
         
-        if (enemy1X + enemyChara1.offsetWidth > blackAreaOffsetX + blackAreaWidth || enemy1X < blackAreaOffsetX/2) {
+        if (enemy1X + enemyChara1.offsetWidth > blackAreaOffsetX + blackAreaWidth || enemy1X < gameAreaWidth) {
             enemy2DirectionX *= -1;
         }
         if (enemy2Y + enemyChara2.offsetHeight  > gameAreaHeight || enemy2Y < 0) {
